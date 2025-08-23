@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String
+  team          String
+  slackHandle   String
+  tools         ProjectTool[]
+  links         Link[]
+  hoursSavedPerWeek Int   @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Tool {
+  id      Int @id @default(autoincrement())
+  name    String @unique
+  projects ProjectTool[]
+}
+
+model ProjectTool {
+  projectId Int
+  toolId    Int
+  project   Project @relation(fields: [projectId], references: [id])
+  tool      Tool    @relation(fields: [toolId], references: [id])
+  @@id([projectId, toolId])
+}
+
+model Person {
+  id          Int @id @default(autoincrement())
+  name        String
+  slackHandle String @unique
+  projects    PersonProject[]
+}
+
+model PersonProject {
+  personId Int
+  projectId Int
+  role     String
+  person   Person @relation(fields: [personId], references: [id])
+  project  Project @relation(fields: [projectId], references: [id])
+  @@id([personId, projectId])
+}
+
+model Link {
+  id        Int @id @default(autoincrement())
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  type      String
+  url       String
+}
