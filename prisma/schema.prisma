@@ -15,6 +15,7 @@ model Project {
   slackHandle   String
   tools         ProjectTool[]
   links         Link[]
+  people       PersonProject[]
   hoursSavedPerWeek Int   @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

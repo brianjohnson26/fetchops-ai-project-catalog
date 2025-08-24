@@ -1,8 +1,324 @@
-* { box-sizing: border-box; }
-body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji"; }
-a { text-decoration: none; }
-input, select, textarea { border: 1px solid #d1d5db; padding: 8px; border-radius: 8px; width: 100%; }
-label { font-weight: 600; font-size: 0.9rem; display: block; margin-top: 8px; }
-button { cursor: pointer; }
-.card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
-.grid { display: grid; gap: 12px; }
+/* Clean, readable defaults */
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e5e7eb;
+
+  /* Brand colors (purple + orange) */
+  --brand-purple: #6d28d9;   /* rich purple */
+  --brand-purple-dark: #4c1d95;
+  --brand-orange: #f59e0b;   /* vibrant orange */
+  --brand-orange-dark: #d97706;
+
+  /* App-wide primary uses purple by default */
+  --brand: var(--brand-purple);
+  --brand-dark: var(--brand-purple-dark);
+
+  --radius: 14px;
+  --shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Header */
+header {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header nav a {
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+header nav a:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+/* Layout helpers */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  animation: fadeIn 180ms ease-out;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0.25rem 0 0.75rem;
+}
+
+h2 {
+  font-size: 1.125rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.small {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Inputs & forms */
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: 10px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 120ms ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Buttons */
+button {
+  appearance: none;
+  border: 0;
+  background: var(--brand);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease, transform 60ms ease;
+  display: inline-block;
+}
+
+button:hover {
+  background: var(--brand-dark);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Utilities */
+.mt-1 {
+  margin-top: 4px;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
+
+.text-sm {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Simple fade-in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Nav CTA styling */
+.spacer {
+  flex: 1;
+}
+
+/* Add Project = solid orange */
+.add-cta {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  margin-left: auto;
+  background: var(--brand-orange) !important;
+  color: #fff !important;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none !important;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.30);
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+.add-cta:hover {
+  background: var(--brand-orange-dark) !important;
+  box-shadow: 0 3px 10px rgba(217, 119, 6, 0.28);
+}
+
+
+/* Layout spacing for header + content */
+header nav {
+  max-width: 1000px;
+  /* keeps nav centered at a nice width */
+  margin: 0 auto;
+  padding: 16px 20px;
+  /* ⬅️ adds space above/below the nav items */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+main {
+  max-width: 1000px;
+  /* center content similar to nav */
+  margin: 0 auto;
+  padding: 28px 20px 24px;
+  /* ⬅️ extra top padding before the dashboard row */
+}
+
+/* Fix checkbox alignment on grouped picklists */
+input[type="checkbox"] {
+  width: auto;
+  height: auto;
+  margin: 0 6px 0 0;
+  padding: 0;
+  border: none;
+  appearance: checkbox;
+  /* restore native look */
+  vertical-align: middle;
+}
+
+/* Make each checkbox + label sit on one line */
+label.flex,
+fieldset .grid label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  vertical-align: middle;
+}
+/* Header accent bar (purple→orange) */
+header::after {
+  content: "";
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, var(--brand-purple), var(--brand-orange));
+}
+
+/* Hero card for the dashboard */
+.hero-card {
+  background: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-orange) 100%);
+  color: #fff;
+}
+.hero-card h1 { color: #fff; }
+.hero-card .small { color: rgba(255,255,255,0.9); }
+
+/* Add Project pill: keep prominent */
+/* Add Project = solid orange */
+.add-cta {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  margin-left: auto;
+  background: var(--brand-orange) !important;
+  color: #fff !important;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none !important;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.30);
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+.add-cta:hover {
+  background: var(--brand-orange-dark) !important;
+  box-shadow: 0 3px 10px rgba(217, 119, 6, 0.28);
+}
+
+
+/* Checkboxes use brand color */
+input[type="checkbox"] { accent-color: var(--brand-purple); }
+
+/* Buttons: solid purple (CTA keeps gradient) */
+button {
+  background: var(--brand-purple) !important;
+  color: #fff;
+}
+button:hover {
+  background: var(--brand-purple-dark) !important;
+}
+
+/* Buttons: solid purple (keep .add-cta gradient) */
+button:not(.add-cta):not(.btn-link) {
+  background: var(--brand-purple) !important;
+  color: #fff !important;
+  background-image: none !important;
+}
+button:not(.add-cta):not(.btn-link):hover {
+  background: var(--brand-purple-dark) !important;
+}
+
+/* Link-style button for nav logout */
+.btn-link {
+  background: transparent !important;
+  color: var(--brand-purple) !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+.btn-link:hover {
+  color: var(--brand-purple-dark) !important;
+  text-decoration: underline;
+}
+
+/* Link-look buttons for actions on Browse (valid HTML, no nested <button>) */
+a.btn-linklike {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--brand-purple);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+a.btn-linklike:hover {
+  background: var(--brand-purple-dark);
+}

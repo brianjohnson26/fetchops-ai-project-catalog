@@ -60,7 +60,6 @@ async function main() {
       { personId: brian.id, projectId: p1.id, role: "Owner" },
       { personId: brian.id, projectId: p2.id, role: "Advisor" }
     ],
-    skipDuplicates: true
   });
 }
 

@@ -1,31 +1,65 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-function requireAdmin(key: string | null | undefined) {
-  const expected = process.env.ADMIN_KEY || "changeme";
-  return key === expected;
+function isAdmin(req: NextRequest) {
+  return req.cookies.get("admin_session")?.value === "1";
 }
 
 export async function POST(req: NextRequest) {
-  const form = await req.formData();
-  const adminKey = String(form.get("adminKey") || "");
-  if (!requireAdmin(adminKey)) {
-    return NextResponse.redirect(new URL("/projects/new?err=Invalid+admin+key", req.url));
+  if (!isAdmin(req)) {
+    const proto = req.headers.get("x-forwarded-proto") || "https";
+    const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
+    const origin = `${proto}://${host}`;
+    return NextResponse.redirect(new URL("/admin?err=signin", origin), 303);
   }
+
+  const form = await req.formData();
 
   const title = String(form.get("title") || "");
   const description = String(form.get("description") || "");
   const team = String(form.get("team") || "");
-  const slackHandle = String(form.get("slackHandle") || "");
+  // ✅ read the Owner Name field and store it in the same DB column
+  const ownerName = String(form.get("ownerName") || "").trim().replace(/^@+/, "");
+  const slackHandle = ownerName;
   const hoursSavedPerWeek = Number(form.get("hoursSavedPerWeek") || 0);
-  const toolIds = form.getAll("toolIds").map(v => Number(v));
+
+  // tools from checkboxes + freeform
+  const selectedNames = form.getAll("toolNames").map((v) => String(v));
+  const groups = ["llms", "automation", "data", "apps", "fetch"];
+  const otherNames = groups.flatMap((g) =>
+    String(form.get(`other_${g}`) || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean)
+  );
+  const allToolNames = Array.from(new Set([...selectedNames, ...otherNames]));
+
+  // links (up to 3)
+  const links: { type: string; url: string }[] = [];
+  for (let i = 1; i <= 3; i++) {
+    const url = String(form.get(`link_url_${i}`) || "").trim();
+    const type = String(form.get(`link_type_${i}`) || "Other").trim() || "Other";
+    if (url) links.push({ type, url });
+  }
 
   await prisma.project.create({
     data: {
-      title, description, team, slackHandle, hoursSavedPerWeek,
-      tools: { create: toolIds.map(id => ({ tool: { connect: { id } } })) }
-    }
+      title,
+      description,
+      team,
+      slackHandle, // stored as the owner name
+      hoursSavedPerWeek,
+      tools: {
+        create: allToolNames.map((name) => ({
+          tool: { connectOrCreate: { where: { name }, create: { name } } },
+        })),
+      },
+      links: { create: links },
+    },
   });
 
-  return NextResponse.redirect(new URL("/projects", req.url));
+  const proto = req.headers.get("x-forwarded-proto") || "https";
+  const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
+  const origin = `${proto}://${host}`;
+  return NextResponse.redirect(new URL("/projects/new?ok=1", origin), 303);
 }

@@ -1,27 +1,105 @@
-import { prisma } from "@/lib/prisma";
-import { z } from "zod";
+import React from "react";
 
-export default async function NewProject() {
-  const tools = await prisma.tool.findMany({ orderBy: { name: "asc" } });
+/** Canonical tool groups (v1) with free-text “Other” per group */
+const GROUPS: { key: string; label: string; items: string[] }[] = [
+  { key: "llms", label: "LLMs / Chatbots", items: ["ChatGPT (OpenAI)", "Claude (Anthropic)", "Gemini (Google)", "Perplexity / Comet", "CustomGPT"] },
+  {
+    key: "automation",
+    label: "Automation / Integrations",
+    items: [
+      "Slack bots / API",
+      "Jira integrations",
+      "Google Drive integrations",
+      "Zendesk API / Macros / Automations",
+      "Internal Fetch APIs / services",
+      "n8n",
+      "Zapier / Make",
+      "Google Apps Script",
+    ],
+  },
+  { key: "data", label: "Data / Productivity", items: ["Google Sheets", "Airtable", "Snowflake", "SQL query", "Unblocked", "NotebookLM", "Grafana", "Tableau"] },
+  { key: "apps", label: "Apps / Interfaces", items: ["Chrome extension", "Python script", "Streamlit", "Gamma"] },
+  {
+    key: "fetch",
+    label: "Fetch / Partner Tools",
+    items: ["Supportal", "Fraudal", "Zendesk", "Kount", "Scout Chatbot", "Agent Assist", "ZAF", "Mission Control"],
+  },
+];
+
+export default function NewProject() {
   return (
     <div className="grid">
       <h1 className="text-xl font-semibold">Add Project</h1>
-      <form method="POST" action="/projects/new/submit" className="card grid" style={{gridTemplateColumns: "1fr"}}>
-        <label>Admin Key<input name="adminKey" defaultValue="" placeholder="Ask Brian/owner" required/></label>
-        <label>Title<input name="title" placeholder="e.g., Automatic Ticket Triage" required/></label>
-        <label>Description<textarea name="description" rows={5} placeholder="What it does, who uses it, benefits" required/></label>
-        <label>Team<input name="team" placeholder="Support, Fraud, etc." required/></label>
-        <label>Owner Slack Handle<input name="slackHandle" placeholder="@someone" required/></label>
+
+      <form method="POST" action="/projects/new/submit" className="card grid" style={{ gridTemplateColumns: "1fr" }}>
+        {/* Admin & basics */}
+        <label>Title<input name="title" placeholder="e.g., Automatic Ticket Triage" required /></label>
+        <label>Description<textarea name="description" rows={5} placeholder="What it does, who uses it, benefits" required /></label>
+
+        {/* Team as picklist */}
+        <label>
+          Team
+          <select name="team" required>
+            <option value="">Select a team</option>
+            <option value="Fraud">Fraud</option>
+            <option value="Implementation">Implementation</option>
+            <option value="Receipt Quality">Receipt Quality</option>
+            <option value="Support">Support</option>
+          </select>
+        </label>
+
+        <label>Owner Name<input name="ownerName" placeholder="Full name" required /></label>
         <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={0} /></label>
-        <label>Tools (choose multiple)</label>
-        <div className="grid" style={{gridTemplateColumns: "repeat(3, 1fr)"}}>
-          {tools.map(t => (
-            <label key={t.id} className="flex gap-2 items-center">
-              <input type="checkbox" name="toolIds" value={t.id} /> {t.name}
-            </label>
+
+        {/* Grouped tools */}
+        <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
+          <h2 className="font-semibold">Tools Used</h2>
+
+          {GROUPS.map((g) => (
+            <fieldset key={g.key} className="card" style={{ padding: 12 }}>
+              <legend className="text-sm" style={{ padding: "0 6px" }}>{g.label}</legend>
+              <div className="grid" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+                {g.items.map((name) => (
+                  <label key={name} className="flex items-center gap-2">
+                    <input type="checkbox" name="toolNames" value={name} /> {name}
+                  </label>
+                ))}
+              </div>
+              <div className="mt-2">
+                <label>
+                  Other (freeform, comma-separated)
+                  <input name={`other_${g.key}`} placeholder="e.g., Cohere, Supabase Functions" />
+                </label>
+              </div>
+            </fieldset>
           ))}
         </div>
-        <button className="rounded bg-blue-600 text-white px-3 py-1.5 text-sm hover:bg-blue-700" type="submit">Create</button>
+
+        {/* Links (optional, up to 3) */}
+        <fieldset className="card" style={{ padding: 12 }}>
+          <legend className="text-sm" style={{ padding: "0 6px" }}>Links (optional)</legend>
+
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="grid" style={{ gridTemplateColumns: "200px 1fr", gap: 12, alignItems: "end", marginTop: i === 1 ? 0 : 8 }}>
+              <label>
+                Type
+                <select name={`link_type_${i}`}>
+                  <option value="Jira">Jira</option>
+                  <option value="Drive">Drive</option>
+                  <option value="Slack">Slack</option>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+              <label>
+                URL
+                <input name={`link_url_${i}`} placeholder="https://…" />
+              </label>
+            </div>
+          ))}
+          <div className="small mt-2">Leave any row blank if you don’t need it.</div>
+        </fieldset>
+
+        <button className="add-cta" type="submit">Create</button>
       </form>
     </div>
   );
