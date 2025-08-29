@@ -5,8 +5,25 @@ run = "npm run start"
 channel = "stable-25_05"
 
 [deployment]
-run = ["sh", "-c", "npm run start"]
+run = ["sh", "-c", "npm run start -- -p $PORT"]
+build = ["sh", "-c", "npx --yes pnpm@9 config set store-dir .pnpm-store && npx --yes pnpm@9 install --prod=false && npx --yes pnpm@9 exec prisma generate && npx --yes pnpm@9 run build"]
 
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[workflows]
+runButton = "Production"
+
+[[workflows.workflow]]
+name = "Production"
+author = 46799544
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run start"
