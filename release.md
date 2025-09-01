@@ -28,6 +28,9 @@ Where to set:
 - **.env (local dev)**:  
 `DATABASE_URL_SUPABASE=postgresql://...`
 
+**Note:** For Prisma with Supabase Session Pooler, add `pgbouncer=true` to the DB URL to disable prepared statements. Improves stability under load/restarts. Safe to defer; add if you see P1001 / 53300 or connection resets.
+
+
 ## Deploy (Replit → Deployments)
 
 - **Build**:  
@@ -177,3 +180,9 @@ Notes
 - [ ] **Health check:** `/api/status` returns `{"ok": true, "db": "up", "projects": <number>}`.
 - [ ] **Smoke test:** Log in → **Add Project** → hard-refresh dashboard and confirm counts update.
 - [ ] **Logs clean:** Deployments → Logs show no Prisma connection errors.
+
+### Manual DB export (ad-hoc)
+- Supabase → SQL → “New query”:
+  ```sql
+  -- quick snapshot of key tables
+  COPY "Project" TO STDOUT WITH CSV HEADER;
