@@ -3,6 +3,7 @@ import React from "react";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ProjectActions from "@/components/ProjectActions";
 
 export default async function ProjectPage({ params }: { params: { id: string } }) {
   const id = Number(params.id);
@@ -34,27 +35,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
       <div className="bg-white border rounded-2xl p-6">
         <div className="flex justify-between items-start mb-4">
           <h1 className="text-3xl font-bold">{project.title}</h1>
-          <div className="flex gap-2">
-            <Link 
-              href={`/projects/${project.id}/edit`}
-              className="px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-            >
-              Edit
-            </Link>
-            <form method="POST" action={`/projects/${project.id}/delete`} className="inline">
-              <button 
-                type="submit"
-                className="px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200"
-                onClick={(e) => {
-                  if (!confirm('Are you sure you want to delete this project?')) {
-                    e.preventDefault();
-                  }
-                }}
-              >
-                Delete
-              </button>
-            </form>
-          </div>
+          <ProjectActions projectId={project.id} />
         </div>
 
         <div className="grid gap-6">
