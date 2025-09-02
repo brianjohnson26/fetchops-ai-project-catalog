@@ -27,3 +27,6 @@ args = "npm run build"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run start"
+
+[agent]
+expertMode = true
