@@ -259,16 +259,16 @@ export default function BrowseFilters({ projects }: { projects: Project[] }) {
             <li key={p.id} className="border rounded-2xl p-4">
               <div className="flex justify-between items-start mb-1">
                 <div className="text-lg font-semibold">{p.title}</div>
-                <div className="flex gap-1">
+                <div className="flex gap-2">
                   <a 
                     href={`/projects/${p.id}`} 
-                    className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors border border-blue-200"
+                    className="text-xs px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors border border-blue-300 shadow-sm font-medium"
                   >
                     View
                   </a>
                   <a 
                     href={`/projects/${p.id}/edit`} 
-                    className="text-xs px-2 py-1 bg-gray-50 text-gray-600 rounded-md hover:bg-gray-100 transition-colors border border-gray-200"
+                    className="text-xs px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors border border-gray-300 shadow-sm font-medium"
                   >
                     Edit
                   </a>
