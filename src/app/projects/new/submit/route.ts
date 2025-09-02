@@ -23,6 +23,11 @@ export async function POST(req: NextRequest) {
   const slackHandle = ownerName;
   const hoursSavedPerWeek = Number(form.get("hoursSavedPerWeek") || 0);
 
+  // ✅ NEW FIELDS
+  const howYouBuiltIt = form.get("howYouBuiltIt")?.toString() || null;
+  const challengesSolutionsTips = form.get("challengesSolutionsTips")?.toString() || null;
+  const otherImpacts = form.get("otherImpacts")?.toString() || null;
+
   // tools from checkboxes + freeform
   const selectedNames = form.getAll("toolNames").map((v) => String(v));
   const groups = ["llms", "automation", "data", "apps", "fetch"];
@@ -49,6 +54,10 @@ export async function POST(req: NextRequest) {
       team,
       slackHandle, // stored as the owner name
       hoursSavedPerWeek,
+      // ✅ include new fields in the DB record
+      howYouBuiltIt,
+      challengesSolutionsTips,
+      otherImpacts,
       tools: {
         create: allToolNames.map((name) => ({
           tool: { connectOrCreate: { where: { name }, create: { name } } },

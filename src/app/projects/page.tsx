@@ -1,121 +1,94 @@
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
-type SP = Record<string, string | string[] | undefined>;
-const asStr = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v) || "";
+export default async function ProjectsPage({
+  searchParams,
+}: {
+  searchParams?: { q?: string };
+}) {
+  const q = typeof searchParams?.q === "string" ? searchParams.q.trim() : "";
 
-export default async function Projects({ searchParams }: { searchParams?: SP }) {
-  const team = asStr(searchParams?.team);
-  const owner = asStr(searchParams?.owner);
-  const tool = asStr(searchParams?.tool);
-  const q = asStr(searchParams?.q);
-
-  const AND: any[] = [];
-  if (team) AND.push({ team });
-  if (owner) AND.push({ slackHandle: owner });
-  if (tool) AND.push({ tools: { some: { tool: { name: tool } } } });
-
-  // SQLite-safe keyword search (no "insensitive" mode flag)
-  if (q) {
-    AND.push({
-      OR: [
+  const OR = q
+    ? [
         { title: { contains: q } },
         { description: { contains: q } },
         { team: { contains: q } },
         { slackHandle: { contains: q } },
+        // NEW: search the three added fields
+        { howYouBuiltIt: { contains: q } },
+        { challengesSolutionsTips: { contains: q } },
+        { otherImpacts: { contains: q } },
+        // search tool names
         { tools: { some: { tool: { name: { contains: q } } } } },
-      ],
-    });
-  }
+      ]
+    : undefined;
 
-  const where = AND.length ? { AND } : {};
-
-  const [projects, teams, owners, tools] = await Promise.all([
-    prisma.project.findMany({
-      where,
-      include: { tools: { include: { tool: true } } },
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.project.findMany({ select: { team: true }, distinct: ["team"] }),
-    prisma.project.findMany({ select: { slackHandle: true }, distinct: ["slackHandle"] }),
-    prisma.tool.findMany({ orderBy: { name: "asc" } }),
-  ]);
-
-  const teamOpts = teams.map((t) => t.team).filter(Boolean).sort();
-  const ownerOpts = owners.map((o) => o.slackHandle).filter(Boolean).sort();
-  const toolOpts = tools.map((t) => t.name);
-
-  // Build export href with current filters
-  const search = new URLSearchParams();
-  if (q) search.set("q", q);
-  if (team) search.set("team", team);
-  if (owner) search.set("owner", owner);
-  if (tool) search.set("tool", tool);
-  const exportHref = `/api/export${search.toString() ? `?${search.toString()}` : ""}`;
+  const projects = await prisma.project.findMany({
+    where: { OR },
+    orderBy: { createdAt: "desc" },
+    include: {
+      tools: { include: { tool: true } },
+      links: true,
+    },
+  });
 
   return (
-    <div className="grid">
-      <h1 className="text-xl font-semibold">Browse Projects</h1>
-
-      {/* Filters */}
-      <form method="GET" className="card grid" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
-        <label>
-          Keyword
-          <input name="q" defaultValue={q} placeholder="Search title/description/tools…" />
-        </label>
-        <label>
-          Team
-          <select name="team" defaultValue={team}>
-            <option value="">All</option>
-            {teamOpts.map((t) => (
-              <option key={t} value={t}>{t}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Owner
-          <select name="owner" defaultValue={owner}>
-            <option value="">All</option>
-            {ownerOpts.map((o) => (
-              <option key={o} value={o}>{o}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Tool
-          <select name="tool" defaultValue={tool}>
-            <option value="">All</option>
-            {toolOpts.map((tn) => (
-              <option key={tn} value={tn}>{tn}</option>
-            ))}
-          </select>
-        </label>
-
-        {/* ACTIONS — use <a> styled as buttons (no nesting buttons inside links) */}
-        <div style={{ gridColumn: "1 / -1", display: "flex", gap: 8, marginTop: 8 }}>
-          <button type="submit">Apply</button>
-          <a href="/projects" className="btn-linklike">Clear</a>
-          <a href={exportHref} className="btn-linklike" style={{ marginLeft: "auto" }}>Download CSV</a>
-        </div>
+    <div className="grid gap-4">
+      <form className="card" style={{ display: "flex", gap: 8 }}>
+        <input
+          type="text"
+          name="q"
+          defaultValue={q}
+          placeholder="Search title, description, team, owner, tools…"
+        />
+        <button type="submit">Search</button>
       </form>
 
-      {/* Results */}
-      <ul className="grid">
+      {projects.length === 0 && (
+        <div className="p-4">No projects found.</div>
+      )}
+
+      <ul className="grid" style={{ gridTemplateColumns: "1fr" }}>
         {projects.map((p) => (
           <li key={p.id} className="card">
-            <a href={`/projects/${p.id}`} className="text-blue-700 font-medium">
-              {p.title}
-            </a>
-            <div className="text-sm text-gray-500">
-              {p.team} • Owner {p.slackHandle}
+            <div className="flex items-center justify-between">
+              <Link href={`/projects/${p.id}`} className="font-semibold">
+                {p.title}
+              </Link>
+              <span className="text-sm opacity-70">{p.team}</span>
             </div>
-            <div className="text-sm mt-1">
-              Tools: {p.tools.map((t) => t.tool.name).join(", ") || "—"}
+            <p className="mt-1 line-clamp-2">{p.description}</p>
+
+            {/* Show quick hints if the new fields exist */}
+            <div className="mt-2 text-sm space-y-1">
+              {p.howYouBuiltIt && (
+                <div className="opacity-80">
+                  <span className="font-medium">Built:</span>{" "}
+                  <span className="line-clamp-1">{p.howYouBuiltIt}</span>
+                </div>
+              )}
+              {p.challengesSolutionsTips && (
+                <div className="opacity-80">
+                  <span className="font-medium">Tips:</span>{" "}
+                  <span className="line-clamp-1">{p.challengesSolutionsTips}</span>
+                </div>
+              )}
+              {p.otherImpacts && (
+                <div className="opacity-80">
+                  <span className="font-medium">Impacts:</span>{" "}
+                  <span className="line-clamp-1">{p.otherImpacts}</span>
+                </div>
+              )}
             </div>
-            <div className="text-sm mt-1">Hours saved/week: {p.hoursSavedPerWeek}</div>
+
+            {p.tools.length > 0 && (
+              <div className="mt-2 text-sm opacity-80">
+                Tools: {p.tools.map((t) => t.tool.name).join(", ")}
+              </div>
+            )}
           </li>
         ))}
       </ul>
     </div>
   );
 }
-

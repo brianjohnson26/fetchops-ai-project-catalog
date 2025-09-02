@@ -1,70 +1,52 @@
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-function esc(v: unknown) {
-  const s = String(v ?? "");
-  return `"${s.replace(/"/g, '""')}"`;
-}
-
-export async function GET(req: Request) {
+// Simple JSON export with optional ?q= search.
+// Returns projects with tools and links.
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const team = searchParams.get("team") ?? "";
-  const owner = searchParams.get("owner") ?? "";
-  const tool  = searchParams.get("tool") ?? "";
-  const q     = searchParams.get("q") ?? "";
+  const q = (searchParams.get("q") || "").trim();
 
-  // Build Prisma where the same way as Browse (SQLite-safe)
-  const AND: any[] = [];
-  if (team) AND.push({ team });
-  if (owner) AND.push({ slackHandle: owner });
-  if (tool) AND.push({ tools: { some: { tool: { name: tool } } } });
-  if (q) {
-    AND.push({
-      OR: [
+  const OR = q
+    ? [
         { title: { contains: q } },
         { description: { contains: q } },
         { team: { contains: q } },
         { slackHandle: { contains: q } },
+        // NEW fields included in search:
+        { howYouBuiltIt: { contains: q } },
+        { challengesSolutionsTips: { contains: q } },
+        { otherImpacts: { contains: q } },
+        // tool names
         { tools: { some: { tool: { name: { contains: q } } } } },
-      ],
-    });
-  }
-  const where = AND.length ? { AND } : {};
+      ]
+    : undefined;
 
   const projects = await prisma.project.findMany({
-    where,
-    include: { tools: { include: { tool: true } }, links: true },
+    where: { OR },
     orderBy: { createdAt: "desc" },
-  });
-
-  const header = [
-    "id","title","description","team","ownerName",
-    "hoursSavedPerWeek","tools","links","createdAt","updatedAt"
-  ].join(",");
-
-  const rows = projects.map((p) => {
-    const tools = p.tools.map((pt) => pt.tool.name).join("; ");
-    const links = p.links.map((l) => `${l.type}: ${l.url}`).join("; ");
-    return [
-      esc(p.id),
-      esc(p.title),
-      esc(p.description),
-      esc(p.team),
-      esc(p.slackHandle),
-      esc(p.hoursSavedPerWeek),
-      esc(tools),
-      esc(links),
-      esc(p.createdAt.toISOString()),
-      esc(p.updatedAt.toISOString()),
-    ].join(",");
-  });
-
-  const csv = [header, ...rows].join("\n");
-
-  return new Response(csv, {
-    headers: {
-      "content-type": "text/csv; charset=utf-8",
-      "content-disposition": 'attachment; filename="projects.csv"',
-      "cache-control": "no-store",
+    include: {
+      tools: { include: { tool: true } },
+      links: true,
     },
   });
+
+  // shape a compact payload
+  const payload = projects.map((p) => ({
+    id: p.id,
+    title: p.title,
+    description: p.description,
+    team: p.team,
+    slackHandle: p.slackHandle,
+    hoursSavedPerWeek: p.hoursSavedPerWeek,
+    howYouBuiltIt: p.howYouBuiltIt ?? null,
+    challengesSolutionsTips: p.challengesSolutionsTips ?? null,
+    otherImpacts: p.otherImpacts ?? null,
+    tools: p.tools.map((t) => t.tool.name),
+    links: p.links.map((l) => ({ type: l.type, url: l.url })),
+    createdAt: p.createdAt,
+    updatedAt: p.updatedAt,
+  }));
+
+  return NextResponse.json({ ok: true, count: payload.length, projects: payload });
 }

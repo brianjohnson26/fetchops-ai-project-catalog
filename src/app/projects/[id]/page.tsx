@@ -1,55 +1,81 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { cookies } from "next/headers";
 
-export const dynamic = "force-dynamic";
-
-export default async function ProjectDetail({ params }: { params: { id: string } }) {
-  const id = Number(params.id);
-  const p = await prisma.project.findUnique({
-    where: { id },
+export default async function ProjectPage({ params }: { params: { id: string } }) {
+  const project = await prisma.project.findUnique({
+    where: { id: Number(params.id) },
     include: { tools: { include: { tool: true } }, links: true },
   });
-  if (!p) return <div className="card">Not found.</div>;
 
-  const isAdmin = cookies().get("admin_session")?.value === "1";
+  if (!project) {
+    return <div className="p-4">Project not found</div>;
+  }
 
   return (
-    <div className="grid">
-      <div className="card">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 12 }}>
-          <div>
-            <h1 className="text-xl font-semibold">{p.title}</h1>
-            <div className="text-sm text-gray-500">{p.team} • Owner {p.slackHandle}</div>
-          </div>
+    <div className="grid gap-4">
+      <h1 className="text-2xl font-bold">{project.title}</h1>
+      <p className="whitespace-pre-line">{project.description}</p>
 
-          {isAdmin && (
-            <div style={{ display: "flex", gap: 8 }}>
-              <a href={`/projects/${p.id}/edit`} className="btn-linklike">Edit</a>
-              <form method="POST" action={`/projects/${p.id}/delete`} style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <button type="submit" style={{ background: "#b91c1c" }}>Delete</button>
-              </form>
-            </div>
-          )}
+      {/* NEW FIELDS */}
+      {project.howYouBuiltIt && (
+        <div>
+          <h2 className="font-semibold">How You Built It</h2>
+          <p className="whitespace-pre-line">{project.howYouBuiltIt}</p>
         </div>
+      )}
 
-        <p className="mt-2 whitespace-pre-wrap">{p.description}</p>
-        <div className="mt-2 text-sm">Tools: {p.tools.map(t => t.tool.name).join(", ") || "—"}</div>
-        <div className="mt-1 text-sm">Hours saved/week: {p.hoursSavedPerWeek}</div>
+      {project.challengesSolutionsTips && (
+        <div>
+          <h2 className="font-semibold">Challenges / Solutions / Tips</h2>
+          <p className="whitespace-pre-line">{project.challengesSolutionsTips}</p>
+        </div>
+      )}
 
-        <div className="mt-3">
-          <h3 className="font-semibold">Links</h3>
-          <ul className="list-disc pl-6">
-            {p.links.map(l => (<li key={l.id}><a className="text-blue-700" href={l.url} target="_blank">{l.type}</a></li>))}
-            {p.links.length === 0 && <li>—</li>}
+      {project.otherImpacts && (
+        <div>
+          <h2 className="font-semibold">Other Qualitative or Quantitative Impacts</h2>
+          <p className="whitespace-pre-line">{project.otherImpacts}</p>
+        </div>
+      )}
+
+      <div>
+        <h2 className="font-semibold">Team</h2>
+        <p>{project.team}</p>
+      </div>
+
+      <div>
+        <h2 className="font-semibold">Owner</h2>
+        <p>{project.slackHandle}</p>
+      </div>
+
+      <div>
+        <h2 className="font-semibold">Hours Saved / Week</h2>
+        <p>{project.hoursSavedPerWeek}</p>
+      </div>
+
+      <div>
+        <h2 className="font-semibold">Tools Used</h2>
+        <ul>
+          {project.tools.map((t) => (
+            <li key={t.toolId}>{t.tool.name}</li>
+          ))}
+        </ul>
+      </div>
+
+      {project.links.length > 0 && (
+        <div>
+          <h2 className="font-semibold">Links</h2>
+          <ul>
+            {project.links.map((l) => (
+              <li key={l.id}>
+                <Link href={l.url} target="_blank">
+                  {l.type}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
-
-        <div className="mt-4 text-sm flex gap-4">
-          <Link href="/projects" className="text-blue-700">← Back</Link>
-          {p.team && <Link href={`/projects?team=${encodeURIComponent(p.team)}`} className="text-blue-700">More in {p.team}</Link>}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

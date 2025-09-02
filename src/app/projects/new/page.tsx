@@ -36,6 +36,34 @@ export default function NewProject() {
         <label>Title<input name="title" placeholder="e.g., Automatic Ticket Triage" required /></label>
         <label>Description<textarea name="description" rows={5} placeholder="What it does, who uses it, benefits" required /></label>
 
+        {/* NEW FIELDS */}
+        <label>
+          How You Built It
+          <textarea
+            name="howYouBuiltIt"
+            rows={4}
+            placeholder="Workflow summary and/or diagram notes"
+          />
+        </label>
+
+        <label>
+          Challenges / Solutions / Tips
+          <textarea
+            name="challengesSolutionsTips"
+            rows={4}
+            placeholder="What was hard? How did you solve it? Any advice for others?"
+          />
+        </label>
+
+        <label>
+          Other Qualitative or Quantitative Impacts
+          <textarea
+            name="otherImpacts"
+            rows={4}
+            placeholder="e.g., quality improvements, NPS, CSAT, fewer escalations, speedups, accuracy deltas, etc."
+          />
+        </label>
+
         {/* Team as picklist */}
         <label>
           Team

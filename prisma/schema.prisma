@@ -5,6 +5,8 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL_SUPABASE")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Project {
@@ -19,6 +21,10 @@ model Project {
   hoursSavedPerWeek Int   @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  howYouBuiltIt             String? @db.Text   // Workflow summary and/or diagram notes
+  challengesSolutionsTips   String? @db.Text   // Challenges / solutions / tips
+  otherImpacts              String? @db.Text   // Other qualitative or quantitative impacts
+
 }
 
 model Tool {

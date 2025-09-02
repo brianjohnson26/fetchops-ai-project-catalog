@@ -5,7 +5,7 @@ run = "npm run start"
 channel = "stable-25_05"
 
 [deployment]
-run = ["sh", "-c", "npm run start -- -p $PORT"]
+run = ["sh", "-c", "npm run start"]
 build = ["sh", "-c", "npx --yes pnpm@9 config set store-dir .pnpm-store && npx --yes pnpm@9 install --prod=false && npx --yes pnpm@9 exec prisma generate && npx --yes pnpm@9 run build"]
 
 [[ports]]
