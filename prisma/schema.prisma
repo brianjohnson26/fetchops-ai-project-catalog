@@ -3,33 +3,32 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL_SUPABASE")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL_SUPABASE")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  directUrl         = env("DIRECT_URL")
 }
 
 model Project {
-  id            Int       @id @default(autoincrement())
-  title         String
-  description   String
-  team          String
-  slackHandle   String
-  tools         ProjectTool[]
-  links         Link[]
-  people       PersonProject[]
-  hoursSavedPerWeek Int   @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  howYouBuiltIt             String? @db.Text   // Workflow summary and/or diagram notes
-  challengesSolutionsTips   String? @db.Text   // Challenges / solutions / tips
-  otherImpacts              String? @db.Text   // Other qualitative or quantitative impacts
-
+  id                      Int              @id @default(autoincrement())
+  title                   String
+  description             String
+  team                    String
+  owner                   String
+  tools                   ProjectTool[]
+  links                   Link[]
+  people                  PersonProject[]
+  hoursSavedPerWeek       Int              @default(0)
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+  howYouBuiltIt           String?          @db.Text   // Workflow summary and/or diagram notes
+  challengesSolutionsTips String?          @db.Text   // Challenges / solutions / tips
+  otherImpacts            String?          @db.Text   // Other qualitative or quantitative impacts
 }
 
 model Tool {
-  id      Int @id @default(autoincrement())
-  name    String @unique
+  id       Int           @id @default(autoincrement())
+  name     String        @unique
   projects ProjectTool[]
 }
 
@@ -38,27 +37,29 @@ model ProjectTool {
   toolId    Int
   project   Project @relation(fields: [projectId], references: [id])
   tool      Tool    @relation(fields: [toolId], references: [id])
+
   @@id([projectId, toolId])
 }
 
 model Person {
-  id          Int @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   name        String
-  slackHandle String @unique
+  slackHandle String  @unique
   projects    PersonProject[]
 }
 
 model PersonProject {
-  personId Int
+  personId  Int
   projectId Int
-  role     String
-  person   Person @relation(fields: [personId], references: [id])
-  project  Project @relation(fields: [projectId], references: [id])
+  role      String
+  person    Person  @relation(fields: [personId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
+
   @@id([personId, projectId])
 }
 
 model Link {
-  id        Int @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   project   Project @relation(fields: [projectId], references: [id])
   projectId Int
   type      String

@@ -19,8 +19,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const title = String(form.get("title") || "");
   const description = String(form.get("description") || "");
   const team = String(form.get("team") || "");
-  const ownerName = String(form.get("ownerName") || "").trim().replace(/^@+/, "");
-  const slackHandle = ownerName; // store owner name in the same column
+
+  // Read owner (accept older field name too), trim and strip leading @
+  const owner =
+    String((form.get("owner") ?? form.get("ownerName")) || "")
+      .trim()
+      .replace(/^@+/, "");
+
   const hoursSavedPerWeek = Number(form.get("hoursSavedPerWeek") || 0);
 
   const selectedNames = form.getAll("toolNames").map((v) => String(v));
@@ -46,7 +51,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       title,
       description,
       team,
-      slackHandle,
+      owner,
       hoursSavedPerWeek,
       tools: {
         deleteMany: {},

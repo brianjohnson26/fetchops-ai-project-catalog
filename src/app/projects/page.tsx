@@ -13,7 +13,7 @@ export default async function ProjectsPage({
         { title: { contains: q } },
         { description: { contains: q } },
         { team: { contains: q } },
-        { slackHandle: { contains: q } },
+        { owner: { contains: q } },
         // NEW: search the three added fields
         { howYouBuiltIt: { contains: q } },
         { challengesSolutionsTips: { contains: q } },
@@ -50,39 +50,24 @@ export default async function ProjectsPage({
 
       <ul className="grid" style={{ gridTemplateColumns: "1fr" }}>
         {projects.map((p) => (
-          <li key={p.id} className="card">
-            <div className="flex items-center justify-between">
-              <Link href={`/projects/${p.id}`} className="font-semibold">
-                {p.title}
-              </Link>
-              <span className="text-sm opacity-70">{p.team}</span>
-            </div>
-            <p className="mt-1 line-clamp-2">{p.description}</p>
+          <li key={p.id} className="card space-y-2">
+            {/* Title */}
+            <h3 className="text-lg font-semibold">
+              <Link href={`/projects/${p.id}`}>{p.title}</Link>
+            </h3>
 
-            {/* Show quick hints if the new fields exist */}
-            <div className="mt-2 text-sm space-y-1">
-              {p.howYouBuiltIt && (
-                <div className="opacity-80">
-                  <span className="font-medium">Built:</span>{" "}
-                  <span className="line-clamp-1">{p.howYouBuiltIt}</span>
-                </div>
-              )}
-              {p.challengesSolutionsTips && (
-                <div className="opacity-80">
-                  <span className="font-medium">Tips:</span>{" "}
-                  <span className="line-clamp-1">{p.challengesSolutionsTips}</span>
-                </div>
-              )}
-              {p.otherImpacts && (
-                <div className="opacity-80">
-                  <span className="font-medium">Impacts:</span>{" "}
-                  <span className="line-clamp-1">{p.otherImpacts}</span>
-                </div>
-              )}
+            {/* Team & Owner */}
+            <div className="text-sm opacity-80">
+              Team: <span className="font-medium">{p.team || "—"}</span>,{" "}
+              Owner: <span className="font-medium">{p.owner || "—"}</span>
             </div>
 
+            {/* Description */}
+            <p className="mt-1">{p.description}</p>
+
+            {/* Tools */}
             {p.tools.length > 0 && (
-              <div className="mt-2 text-sm opacity-80">
+              <div className="text-sm opacity-80">
                 Tools: {p.tools.map((t) => t.tool.name).join(", ")}
               </div>
             )}

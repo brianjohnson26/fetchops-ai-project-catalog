@@ -144,7 +144,7 @@ Notes
   - Fix: Insert a quick test row in Supabase:
     ```sql
     INSERT INTO "Tool" ("name") VALUES ('ChatGPT (OpenAI)');
-    INSERT INTO "Project" ("title","description","team","slackHandle","hoursSavedPerWeek","createdAt","updatedAt")
+    INSERT INTO "Project" ("title","description","team","owner","hoursSavedPerWeek","createdAt","updatedAt")
     VALUES ('Sample AI Project','Seed row','Support','@you',1,now(),now());
     ```
   - Hard-refresh, or visit `/api/status` to confirm `projects` count.

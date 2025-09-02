@@ -8,6 +8,9 @@ CREATE TABLE "Project" (
     "hoursSavedPerWeek" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "howYouBuiltIt" TEXT,
+    "challengesSolutionsTips" TEXT,
+    "otherImpacts" TEXT,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
@@ -76,4 +79,3 @@ ALTER TABLE "PersonProject" ADD CONSTRAINT "PersonProject_projectId_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "Link" ADD CONSTRAINT "Link_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-

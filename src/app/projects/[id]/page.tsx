@@ -45,7 +45,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
       <div>
         <h2 className="font-semibold">Owner</h2>
-        <p>{project.slackHandle}</p>
+        <p>{project.owner}</p>
       </div>
 
       <div>

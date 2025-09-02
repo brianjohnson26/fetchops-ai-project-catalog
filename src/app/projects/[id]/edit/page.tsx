@@ -37,7 +37,7 @@ export default async function EditProject({ params }: { params: { id: string } }
     <div className="grid">
       <div className="card">
         <h1 className="text-xl font-semibold">Edit Project</h1>
-        <div className="small">ID #{p.id} • Owner {p.slackHandle}</div>
+        <div className="small">ID #{p.id} • Owner {p.owner}</div>
       </div>
 
       {/* Point to the new submit route */}
@@ -58,7 +58,7 @@ export default async function EditProject({ params }: { params: { id: string } }
           </select>
         </label>
 
-        <label>Owner Name Handle<input name="ownerName" defaultValue={p.slackHandle} required /></label>
+        <label>Owner<input name="owner" defaultValue={p.owner} required /></label>
         <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={p.hoursSavedPerWeek} /></label>
 
         {/* Grouped tools */}

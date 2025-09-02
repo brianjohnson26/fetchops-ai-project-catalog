@@ -18,12 +18,14 @@ export async function POST(req: NextRequest) {
   const title = String(form.get("title") || "");
   const description = String(form.get("description") || "");
   const team = String(form.get("team") || "");
-  // ✅ read the Owner Name field and store it in the same DB column
-  const ownerName = String(form.get("ownerName") || "").trim().replace(/^@+/, "");
-  const slackHandle = ownerName;
+  // Read owner (accepts older "ownerName" too), trim and strip leading @
+  const owner =
+    String((form.get("owner") ?? form.get("ownerName")) || "")
+      .trim()
+      .replace(/^@+/, "");
   const hoursSavedPerWeek = Number(form.get("hoursSavedPerWeek") || 0);
 
-  // ✅ NEW FIELDS
+  // NEW FIELDS
   const howYouBuiltIt = form.get("howYouBuiltIt")?.toString() || null;
   const challengesSolutionsTips = form.get("challengesSolutionsTips")?.toString() || null;
   const otherImpacts = form.get("otherImpacts")?.toString() || null;
@@ -52,9 +54,9 @@ export async function POST(req: NextRequest) {
       title,
       description,
       team,
-      slackHandle, // stored as the owner name
+      owner, // stored as the owner name
       hoursSavedPerWeek,
-      // ✅ include new fields in the DB record
+      // include new fields in the DB record
       howYouBuiltIt,
       challengesSolutionsTips,
       otherImpacts,

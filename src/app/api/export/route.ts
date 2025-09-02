@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
         { title: { contains: q } },
         { description: { contains: q } },
         { team: { contains: q } },
-        { slackHandle: { contains: q } },
+        { owner: { contains: q } },
         // NEW fields included in search:
         { howYouBuiltIt: { contains: q } },
         { challengesSolutionsTips: { contains: q } },
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     title: p.title,
     description: p.description,
     team: p.team,
-    slackHandle: p.slackHandle,
+    owner: p.owner,
     hoursSavedPerWeek: p.hoursSavedPerWeek,
     howYouBuiltIt: p.howYouBuiltIt ?? null,
     challengesSolutionsTips: p.challengesSolutionsTips ?? null,

@@ -12,11 +12,11 @@ export default async function Experts({ searchParams }: { searchParams?: SP }) {
   if (toolName) {
     const projects = await prisma.project.findMany({
       where: { tools: { some: { tool: { name: toolName } } } },
-      select: { slackHandle: true },
+      select: { owner: true },
     });
     const counts = new Map<string, number>();
     for (const p of projects) {
-      const name = (p.slackHandle || "").replace(/^@+/, "");
+      const name = (p.owner || "").trim();
       if (!name) continue;
       counts.set(name, (counts.get(name) || 0) + 1);
     }

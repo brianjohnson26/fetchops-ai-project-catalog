@@ -76,7 +76,7 @@ export default function NewProject() {
           </select>
         </label>
 
-        <label>Owner Name<input name="ownerName" placeholder="Full name" required /></label>
+        <label>Owner<input name="owner" placeholder="Full name" required /></label>
         <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={0} /></label>
 
         {/* Grouped tools */}
