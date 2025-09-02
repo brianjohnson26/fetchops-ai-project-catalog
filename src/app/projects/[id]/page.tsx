@@ -41,7 +41,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             >
               Edit
             </Link>
-            <form method="POST" action={`/projects/${project.id}/delete`} className="inline">
+            <form method="POST" action={`/api/projects/${project.id}/delete`} className="inline">
               <button 
                 type="submit"
                 className="px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200"
