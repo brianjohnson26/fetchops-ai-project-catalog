@@ -2,6 +2,150 @@
 import React from "react";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+
+export default async function ProjectPage({ params }: { params: { id: string } }) {
+  const project = await prisma.project.findUnique({
+    where: { id: Number(params.id) },
+    include: { 
+      tools: { include: { tool: true } }, 
+      links: true 
+    },
+  });
+
+  if (!project) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="bg-white border rounded-2xl p-6">
+          <h1 className="text-2xl font-bold mb-4">Project not found</h1>
+          <Link href="/projects" className="text-blue-600 hover:text-blue-800">
+            ← Back to Projects
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="bg-white border rounded-2xl p-6">
+        <div className="flex justify-between items-start mb-4">
+          <h1 className="text-3xl font-bold">{project.title}</h1>
+          <div className="flex gap-2">
+            <Link 
+              href={`/projects/${project.id}/edit`}
+              className="px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+            >
+              Edit
+            </Link>
+            <form method="POST" action={`/projects/${project.id}/delete`} className="inline">
+              <button 
+                type="submit"
+                className="px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200"
+                onClick={(e) => {
+                  if (!confirm('Are you sure you want to delete this project?')) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                Delete
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div className="grid gap-6">
+          <div>
+            <h2 className="text-lg font-semibold mb-2">Description</h2>
+            <p className="text-gray-700 whitespace-pre-wrap">{project.description}</p>
+          </div>
+
+          {project.howYouBuiltIt && (
+            <div>
+              <h2 className="text-lg font-semibold mb-2">How You Built It</h2>
+              <p className="text-gray-700 whitespace-pre-wrap">{project.howYouBuiltIt}</p>
+            </div>
+          )}
+
+          {project.challengesSolutionsTips && (
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Challenges / Solutions / Tips</h2>
+              <p className="text-gray-700 whitespace-pre-wrap">{project.challengesSolutionsTips}</p>
+            </div>
+          )}
+
+          {project.otherImpacts && (
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Other Qualitative or Quantitative Impacts</h2>
+              <p className="text-gray-700 whitespace-pre-wrap">{project.otherImpacts}</p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Team</h2>
+              <p className="text-gray-700">{project.team}</p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Owner</h2>
+              <p className="text-gray-700">{project.owner}</p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Hours Saved / Week</h2>
+              <p className="text-gray-700">{project.hoursSavedPerWeek}</p>
+            </div>
+          </div>
+
+          {project.tools.length > 0 && (
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Tools Used</h2>
+              <div className="flex flex-wrap gap-2">
+                {project.tools.map((t) => (
+                  <span 
+                    key={t.tool.id} 
+                    className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm"
+                  >
+                    {t.tool.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {project.links.length > 0 && (
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Links</h2>
+              <ul className="space-y-2">
+                {project.links.map((link) => (
+                  <li key={link.id}>
+                    <a 
+                      href={link.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 underline"
+                    >
+                      {link.type}: {link.url}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-8 pt-4 border-t">
+          <Link 
+            href="/projects" 
+            className="text-blue-600 hover:text-blue-800"
+          >
+            ← Back to Projects
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 import { notFound } from "next/navigation";
 
 export default async function ProjectDetail({ params }: { params: { id: string } }) {
