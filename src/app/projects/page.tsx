@@ -49,11 +49,11 @@ export default async function ProjectsPage() {
   const projects = await getProjects();
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-8">
-      <header className="mb-6">
-        <div className="flex justify-between items-start">
+    <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
+      <div className="card">
+        <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold">Browse AI Projects</h1>
+            <h1 className="text-2xl font-bold">Browse AI Projects</h1>
             <p className="text-sm text-gray-600 mt-1">
               Filter by keyword, team, owner, and tools.
             </p>
@@ -75,16 +75,16 @@ export default async function ProjectsPage() {
             </a>
           </div>
         </div>
-      </header>
 
-      <BrowseFilters projects={projects} />
+        <BrowseFilters projects={projects} />
 
-      {projects.length === 0 && (
-        <div className="mt-6 rounded-xl border p-4 text-sm text-gray-700">
-          No projects found in the database yet. Add a project on the Admin page,
-          then refresh this page.
-        </div>
-      )}
-    </main>
+        {projects.length === 0 && (
+          <div className="mt-6 rounded-xl border p-4 text-sm text-gray-700">
+            No projects found in the database yet. Add a project on the Admin page,
+            then refresh this page.
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
