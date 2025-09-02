@@ -130,7 +130,7 @@ export default function BrowseFilters({ projects }: { projects: Project[] }) {
           <input
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Keyword: title, summary, owner, tools…"
+            placeholder="🔍 Type to search projects (real-time filtering)..."
             className="w-full rounded-xl border p-2"
           />
         </div>
@@ -246,9 +246,16 @@ export default function BrowseFilters({ projects }: { projects: Project[] }) {
         </div>
       </div>
 
-      {/* Count */}
-      <div className="text-sm text-gray-600">
-        Showing <strong>{filtered.length}</strong> of {projects.length} projects
+      {/* Count and filter status */}
+      <div className="flex items-center gap-4 text-sm text-gray-600">
+        <span>
+          Showing <strong>{filtered.length}</strong> of {projects.length} projects
+        </span>
+        {(keyword || team !== 'all' || owner !== 'all' || selectedTools.size > 0) && (
+          <span className="text-blue-600 font-medium">
+            🔍 Filters active - results update automatically
+          </span>
+        )}
       </div>
 
       {/* Results */}
