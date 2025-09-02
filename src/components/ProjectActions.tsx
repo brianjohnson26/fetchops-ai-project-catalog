@@ -24,16 +24,16 @@ export default function ProjectActions({ projectId }: { projectId: number }) {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-3">
       <a 
         href={`/projects/${projectId}/edit`}
-        className="px-3 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+        className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors border border-blue-300 shadow-sm font-medium text-sm"
       >
         Edit
       </a>
       <button 
         onClick={handleDelete}
-        className="px-3 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200"
+        className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors border border-red-300 shadow-sm font-medium text-sm"
       >
         Delete
       </button>
