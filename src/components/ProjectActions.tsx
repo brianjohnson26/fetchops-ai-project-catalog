@@ -24,10 +24,10 @@ export default function ProjectActions({ projectId }: { projectId: number }) {
   };
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-6">
       <a 
         href={`/projects/${projectId}/edit`}
-        className="btn-linklike"
+        className="btn-linklike mr-2"
       >
         Edit
       </a>
