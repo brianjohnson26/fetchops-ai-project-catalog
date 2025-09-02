@@ -27,7 +27,7 @@ export default function ProjectActions({ projectId }: { projectId: number }) {
     <div className="flex gap-2">
       <a 
         href={`/projects/${projectId}/edit`}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors shadow-sm font-medium text-sm inline-flex items-center"
+        className="btn-linklike"
       >
         Edit
       </a>
