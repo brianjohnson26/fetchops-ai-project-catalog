@@ -24,7 +24,7 @@ export default function ProjectActions({ projectId }: { projectId: number }) {
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-4">
       <a 
         href={`/projects/${projectId}/edit`}
         className="btn-linklike"
