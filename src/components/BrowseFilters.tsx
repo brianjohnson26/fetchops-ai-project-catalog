@@ -257,7 +257,17 @@ export default function BrowseFilters({ projects }: { projects: Project[] }) {
           const pt = toList(p.tools);
           return (
             <li key={p.id} className="border rounded-2xl p-4">
-              <div className="text-lg font-semibold mb-1">{p.title}</div>
+              <div className="flex justify-between items-start mb-1">
+                <div className="text-lg font-semibold">{p.title}</div>
+                <div className="flex gap-2">
+                  <a href={`/projects/${p.id}`} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200">
+                    View
+                  </a>
+                  <a href={`/projects/${p.id}/edit`} className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                    Edit
+                  </a>
+                </div>
+              </div>
               {p.summary ? (
                 <p className="text-sm text-gray-700 mb-3 line-clamp-3">{p.summary}</p>
               ) : null}
