@@ -58,11 +58,25 @@ export default async function ProjectsPage() {
               Filter by keyword, team, owner, and tools.
             </p>
           </div>
-          <div className="flex gap-2">
+          <div style={{ display: 'flex', gap: '8px' }}>
             <a 
               href="/api/projects-csv" 
-              className="px-4 py-2 bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition-colors border border-purple-300 shadow-sm font-medium text-sm"
               download="projects.csv"
+              style={{
+                display: 'inline-block',
+                padding: '10px 14px',
+                backgroundColor: 'var(--brand-purple)',
+                color: '#fff',
+                borderRadius: '10px',
+                fontWeight: '600',
+                fontSize: '14px',
+                textDecoration: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'background 120ms ease'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--brand-purple-dark)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--brand-purple)'}
             >
               Export CSV
             </a>
