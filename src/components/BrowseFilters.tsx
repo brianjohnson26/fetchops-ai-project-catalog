@@ -58,14 +58,14 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
         {/* Header with title and export button */}
         <div className="flex justify-between items-start mb-6">
           <div>
-            <h1 className="text-2xl font-semibold text-black">Browse AI Projects</h1>
-            <p className="mt-1 text-sm text-gray-600">
+            <h1 className="text-3xl font-semibold text-black">Browse AI Projects</h1>
+            <p className="mt-2 text-gray-600">
               Filter by keyword, team, owner, and tools.
             </p>
           </div>
           <a
             href="/api/projects-csv"
-            className="inline-flex items-center rounded-md bg-gray-100 border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300"
+            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Export CSV
           </a>
