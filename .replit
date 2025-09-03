@@ -5,8 +5,8 @@ run = "npm run start"
 channel = "stable-25_05"
 
 [deployment]
-run = ["sh", "-c", "npm run start"]
-build = ["sh", "-c", "npx --yes pnpm@9 config set store-dir .pnpm-store && npx --yes pnpm@9 install --prod=false && npx --yes pnpm@9 exec prisma generate && npx --yes pnpm@9 run build"]
+run = ["sh", "-c", "npm run start -- -p $PORT"]
+build = ["sh", "-c", "DATABASE_URL_SUPABASE=$DATABASE_URL_SUPABASE npx --yes pnpm@9 install --prod=false && npx --yes pnpm@9 exec prisma generate && npx --yes pnpm@9 run build"]
 
 [[ports]]
 localPort = 3000
