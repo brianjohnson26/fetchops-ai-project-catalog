@@ -37,7 +37,7 @@ async function getProjects(): Promise<BrowseProject[]> {
         null,
       team: r.team ?? null,
       owner: r.owner ?? null,
-      tools: r.tools.map((t) => t.tool.name),
+      tools: r.tools,
     }));
   } catch (err) {
     console.error("Failed to load projects:", err);
