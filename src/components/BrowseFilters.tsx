@@ -54,36 +54,12 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
   return (
     <div className="mx-auto max-w-5xl">
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        {/* Header with title and export button */}
-        <div className="flex justify-between items-center mb-6" style={{ width: '100%' }}>
-          <div style={{ flex: '0 1 auto' }}>
-            <h1 className="text-3xl font-semibold text-black">Browse AI Projects</h1>
-            <p className="mt-2 text-gray-600">
-              Filter by keyword, team, owner, and tools.
-            </p>
-          </div>
-          <div style={{ flex: '0 0 auto', marginLeft: '24px' }}>
-            <a
-              href="/api/projects-csv"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                padding: '8px 16px',
-                backgroundColor: '#6d28d9',
-                color: 'white',
-                borderRadius: '6px',
-                fontSize: '14px',
-                fontWeight: '600',
-                textDecoration: 'none',
-                transition: 'background-color 0.15s ease',
-                whiteSpace: 'nowrap'
-              }}
-              onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#300d38'}
-              onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#6d28d9'}
-            >
-              Export CSV
-            </a>
-          </div>
+        {/* Header with title */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-semibold text-black">Browse AI Projects</h1>
+          <p className="mt-2 text-gray-600">
+            Filter by keyword, team, owner, and tools.
+          </p>
         </div>
 
         {/* Keyword filter */}
@@ -176,8 +152,30 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
           </div>
         </div>
 
-        {/* Results */}
-        <div className="mt-6 text-sm text-black">Showing {count} project{count === 1 ? "" : "s"}</div>
+        {/* Results with Export CSV button */}
+        <div className="mt-6 flex justify-between items-center">
+          <div className="text-sm text-black">Showing {count} project{count === 1 ? "" : "s"}</div>
+          <a
+            href="/api/projects-csv"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '8px 16px',
+              backgroundColor: '#6d28d9',
+              color: 'white',
+              borderRadius: '6px',
+              fontSize: '14px',
+              fontWeight: '600',
+              textDecoration: 'none',
+              transition: 'background-color 0.15s ease',
+              whiteSpace: 'nowrap'
+            }}
+            onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#300d38'}
+            onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#6d28d9'}
+          >
+            Export CSV
+          </a>
+        </div>
 
         <ul className="mt-2 space-y-6">
           {filtered.map((p) => (
