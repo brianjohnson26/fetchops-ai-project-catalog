@@ -67,6 +67,8 @@ export default async function EditProject({ params }: { params: { id: string } }
           />
         </label>
 
+        <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={p.hoursSavedPerWeek} /></label>
+
         <label>
           Other Qualitative or Quantitative Impacts
           <textarea
@@ -90,7 +92,6 @@ export default async function EditProject({ params }: { params: { id: string } }
         </label>
 
         <label>Owner<input name="owner" defaultValue={p.owner} required /></label>
-        <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={p.hoursSavedPerWeek} /></label>
 
         {/* Links (prefill up to 3) */}
         <fieldset className="card" style={{ padding: 12 }}>

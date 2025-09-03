@@ -55,6 +55,8 @@ export default function NewProject() {
           />
         </label>
 
+        <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={0} /></label>
+
         <label>
           Other Qualitative or Quantitative Impacts
           <textarea
@@ -77,7 +79,6 @@ export default function NewProject() {
         </label>
 
         <label>Owner<input name="owner" placeholder="Full name" required /></label>
-        <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={0} /></label>
 
         {/* Links (optional, up to 3) */}
         <fieldset className="card" style={{ padding: 12 }}>
