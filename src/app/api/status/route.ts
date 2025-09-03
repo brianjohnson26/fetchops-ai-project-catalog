@@ -20,8 +20,9 @@ export async function GET() {
       host: process.env.DATABASE_URL_SUPABASE?.match(/@([^:]+)/)?.[1],
       port: process.env.DATABASE_URL_SUPABASE?.match(/:(\d+)/)?.[1]
     });
+    const errorCode = error && typeof error === 'object' && 'code' in error ? error.code : 'UNKNOWN';
     return NextResponse.json(
-      { ok: false, db: "down", error: String(error), code: error.code || 'UNKNOWN' },
+      { ok: false, db: "down", error: String(error), code: errorCode },
       { status: 500 }
     );
   }
