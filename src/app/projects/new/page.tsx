@@ -112,9 +112,9 @@ export default function NewProject() {
               <label>
                 Type
                 <select name={`link_type_${i}`}>
+                  <option value="Tool/Homepage">Tool/Homepage</option>
+                  <option value="Demo">Demo</option>
                   <option value="Jira">Jira</option>
-                  <option value="Drive">Drive</option>
-                  <option value="Slack">Slack</option>
                   <option value="Other">Other</option>
                 </select>
               </label>
