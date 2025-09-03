@@ -83,14 +83,21 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
           />
         </div>
 
-        {/* Filters row - horizontal layout */}
-        <div className="flex gap-6 mb-6">
-          <div className="flex-1">
-            <label className="mb-2 block text-sm font-medium text-black">Team</label>
+        {/* Filters row - horizontal layout with explicit styles */}
+        <div style={{ display: 'flex', gap: '24px', marginBottom: '24px' }}>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'black' }}>Team</label>
             <select
               value={team}
               onChange={(e) => setTeam(e.target.value)}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              style={{ 
+                width: '100%', 
+                padding: '8px 12px', 
+                border: '1px solid #d1d5db', 
+                borderRadius: '6px', 
+                backgroundColor: 'white',
+                fontSize: '14px'
+              }}
             >
               <option value="__ALL__">All teams</option>
               {allTeams.map((t) => (
@@ -101,12 +108,19 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
             </select>
           </div>
 
-          <div className="flex-1">
-            <label className="mb-2 block text-sm font-medium text-black">Owner</label>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'black' }}>Owner</label>
             <select
               value={owner}
               onChange={(e) => setOwner(e.target.value)}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              style={{ 
+                width: '100%', 
+                padding: '8px 12px', 
+                border: '1px solid #d1d5db', 
+                borderRadius: '6px', 
+                backgroundColor: 'white',
+                fontSize: '14px'
+              }}
             >
               <option value="__ALL__">All owners</option>
               {allOwners.map((o) => (
@@ -117,8 +131,8 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
             </select>
           </div>
 
-          <div className="flex-1">
-            <label className="mb-2 block text-sm font-medium text-black">Tools</label>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'black' }}>Tools</label>
             <select
               value={Object.keys(toolFilter).find(k => toolFilter[k]) || "__ALL__"}
               onChange={(e) => {
@@ -128,7 +142,14 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
                   setToolFilter({ [e.target.value]: true });
                 }
               }}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              style={{ 
+                width: '100%', 
+                padding: '8px 12px', 
+                border: '1px solid #d1d5db', 
+                borderRadius: '6px', 
+                backgroundColor: 'white',
+                fontSize: '14px'
+              }}
             >
               <option value="__ALL__">All tools</option>
               {allTools.map((t) => (
