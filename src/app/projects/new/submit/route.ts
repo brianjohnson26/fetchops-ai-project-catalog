@@ -74,5 +74,5 @@ export async function POST(req: NextRequest) {
   const proto = req.headers.get("x-forwarded-proto") || "https";
   const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
   const origin = `${proto}://${host}`;
-  return NextResponse.redirect(new URL("/projects/new?ok=1", origin), 303);
+  return NextResponse.redirect(new URL("/projects?ok=1", origin), 303);
 }
