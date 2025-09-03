@@ -77,8 +77,8 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
               textDecoration: 'none',
               transition: 'background-color 0.15s ease'
             }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#300d38'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#6d28d9'}
+            onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#300d38'}
+            onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#6d28d9'}
           >
             Export CSV
           </a>
