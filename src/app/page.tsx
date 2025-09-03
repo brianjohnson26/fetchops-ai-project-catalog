@@ -20,7 +20,20 @@ async function getStats() {
 }
 
 export default async function Dashboard() {
-  const s = await getStats();
+  let s;
+  
+  try {
+    s = await getStats();
+  } catch (error) {
+    console.error("Failed to connect to database:", error);
+    // Fallback data when database is unreachable
+    s = {
+      projectCount: 0,
+      totalHours: 0,
+      mostCommonTools: [],
+      latest: []
+    };
+  }
   return (
     <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
       {/* Brand hero */}
