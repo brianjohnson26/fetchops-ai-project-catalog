@@ -1,4 +1,3 @@
-
 // src/components/BrowseFilters.tsx
 "use client";
 
@@ -57,31 +56,33 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         {/* Header with title and export button */}
         <div className="flex justify-between items-start mb-6">
-          <div>
+          <div className="flex-1">
             <h1 className="text-3xl font-semibold text-black">Browse AI Projects</h1>
             <p className="mt-2 text-gray-600">
               Filter by keyword, team, owner, and tools.
             </p>
           </div>
-          <a
-            href="/api/projects-csv"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              padding: '8px 16px',
-              backgroundColor: '#6d28d9',
-              color: 'white',
-              borderRadius: '6px',
-              fontSize: '14px',
-              fontWeight: '600',
-              textDecoration: 'none',
-              transition: 'background-color 0.15s ease'
-            }}
-            onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#300d38'}
-            onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#6d28d9'}
-          >
-            Export CSV
-          </a>
+          <div className="flex-shrink-0 ml-4">
+            <a
+              href="/api/projects-csv"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '8px 16px',
+                backgroundColor: '#6d28d9',
+                color: 'white',
+                borderRadius: '6px',
+                fontSize: '14px',
+                fontWeight: '600',
+                textDecoration: 'none',
+                transition: 'background-color 0.15s ease'
+              }}
+              onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#300d38'}
+              onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#6d28d9'}
+            >
+              Export CSV
+            </a>
+          </div>
         </div>
 
         {/* Keyword filter */}
@@ -103,11 +104,11 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
             <select
               value={team}
               onChange={(e) => setTeam(e.target.value)}
-              style={{ 
-                width: '100%', 
-                padding: '8px 12px', 
-                border: '1px solid #d1d5db', 
-                borderRadius: '6px', 
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #d1d5db',
+                borderRadius: '6px',
                 backgroundColor: 'white',
                 fontSize: '14px'
               }}
@@ -126,11 +127,11 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
             <select
               value={owner}
               onChange={(e) => setOwner(e.target.value)}
-              style={{ 
-                width: '100%', 
-                padding: '8px 12px', 
-                border: '1px solid #d1d5db', 
-                borderRadius: '6px', 
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #d1d5db',
+                borderRadius: '6px',
                 backgroundColor: 'white',
                 fontSize: '14px'
               }}
@@ -155,11 +156,11 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
                   setToolFilter({ [e.target.value]: true });
                 }
               }}
-              style={{ 
-                width: '100%', 
-                padding: '8px 12px', 
-                border: '1px solid #d1d5db', 
-                borderRadius: '6px', 
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #d1d5db',
+                borderRadius: '6px',
                 backgroundColor: 'white',
                 fontSize: '14px'
               }}
