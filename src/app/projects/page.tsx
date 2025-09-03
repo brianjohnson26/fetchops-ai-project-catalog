@@ -62,21 +62,7 @@ export default async function ProjectsPage() {
             <a 
               href="/api/projects-csv" 
               download="projects.csv"
-              style={{
-                display: 'inline-block',
-                padding: '10px 14px',
-                backgroundColor: 'var(--brand-purple)',
-                color: '#fff',
-                borderRadius: '10px',
-                fontWeight: '600',
-                fontSize: '14px',
-                textDecoration: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background 120ms ease'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--brand-purple-dark)'}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--brand-purple)'}
+              className="btn-linklike"
             >
               Export CSV
             </a>
