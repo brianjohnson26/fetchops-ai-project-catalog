@@ -79,6 +79,30 @@ export default function NewProject() {
         <label>Owner<input name="owner" placeholder="Full name" required /></label>
         <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={0} /></label>
 
+        {/* Links (optional, up to 3) */}
+        <fieldset className="card" style={{ padding: 12 }}>
+          <legend className="text-sm" style={{ padding: "0 6px" }}>Links - Include a demo, a link to the app/tool, and any other URLs relevant to the project</legend>
+
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="grid" style={{ gridTemplateColumns: "200px 1fr", gap: 12, alignItems: "end", marginTop: i === 1 ? 0 : 8 }}>
+              <label>
+                Type
+                <select name={`link_type_${i}`}>
+                  <option value="Tool/Homepage">Tool/Homepage</option>
+                  <option value="Demo">Demo</option>
+                  <option value="Jira">Jira</option>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+              <label>
+                URL
+                <input name={`link_url_${i}`} placeholder="https://…" />
+              </label>
+            </div>
+          ))}
+          <div className="small mt-2">Leave any row blank if you don't need it.</div>
+        </fieldset>
+
         {/* Grouped tools */}
         <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
           <h2 className="font-semibold">Tools Used</h2>
@@ -102,30 +126,6 @@ export default function NewProject() {
             </fieldset>
           ))}
         </div>
-
-        {/* Links (optional, up to 3) */}
-        <fieldset className="card" style={{ padding: 12 }}>
-          <legend className="text-sm" style={{ padding: "0 6px" }}>Links - Include a demo, a link to the app/tool, and any other URLs relevant to the project</legend>
-
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="grid" style={{ gridTemplateColumns: "200px 1fr", gap: 12, alignItems: "end", marginTop: i === 1 ? 0 : 8 }}>
-              <label>
-                Type
-                <select name={`link_type_${i}`}>
-                  <option value="Tool/Homepage">Tool/Homepage</option>
-                  <option value="Demo">Demo</option>
-                  <option value="Jira">Jira</option>
-                  <option value="Other">Other</option>
-                </select>
-              </label>
-              <label>
-                URL
-                <input name={`link_url_${i}`} placeholder="https://…" />
-              </label>
-            </div>
-          ))}
-          <div className="small mt-2">Leave any row blank if you don’t need it.</div>
-        </fieldset>
 
         <button className="add-cta" type="submit">Create</button>
       </form>

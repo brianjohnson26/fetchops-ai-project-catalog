@@ -92,29 +92,6 @@ export default async function EditProject({ params }: { params: { id: string } }
         <label>Owner<input name="owner" defaultValue={p.owner} required /></label>
         <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={p.hoursSavedPerWeek} /></label>
 
-        {/* Grouped tools */}
-        <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
-          <h2 className="font-semibold">Tools Used</h2>
-          {GROUPS.map((g) => (
-            <fieldset key={g.key} className="card" style={{ padding: 12 }}>
-              <legend className="text-sm" style={{ padding: "0 6px" }}>{g.label}</legend>
-              <div className="grid" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-                {g.items.map((name) => (
-                  <label key={name} className="flex items-center gap-2">
-                    <input type="checkbox" name="toolNames" value={name} defaultChecked={current.has(name)} /> {name}
-                  </label>
-                ))}
-              </div>
-              <div className="mt-2">
-                <label>
-                  Other (freeform, comma-separated)
-                  <input name={`other_${g.key}`} placeholder="e.g., Cohere, Supabase Functions" />
-                </label>
-              </div>
-            </fieldset>
-          ))}
-        </div>
-
         {/* Links (prefill up to 3) */}
         <fieldset className="card" style={{ padding: 12 }}>
           <legend className="text-sm" style={{ padding: "0 6px" }}>Links</legend>
@@ -140,6 +117,29 @@ export default async function EditProject({ params }: { params: { id: string } }
           })}
           <div className="small mt-2">Leave any row blank to omit it.</div>
         </fieldset>
+
+        {/* Grouped tools */}
+        <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
+          <h2 className="font-semibold">Tools Used</h2>
+          {GROUPS.map((g) => (
+            <fieldset key={g.key} className="card" style={{ padding: 12 }}>
+              <legend className="text-sm" style={{ padding: "0 6px" }}>{g.label}</legend>
+              <div className="grid" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+                {g.items.map((name) => (
+                  <label key={name} className="flex items-center gap-2">
+                    <input type="checkbox" name="toolNames" value={name} defaultChecked={current.has(name)} /> {name}
+                  </label>
+                ))}
+              </div>
+              <div className="mt-2">
+                <label>
+                  Other (freeform, comma-separated)
+                  <input name={`other_${g.key}`} placeholder="e.g., Cohere, Supabase Functions" />
+                </label>
+              </div>
+            </fieldset>
+          ))}
+        </div>
 
         <div style={{ display: "flex", gap: 8 }}>
           <button type="submit">Save changes</button>
