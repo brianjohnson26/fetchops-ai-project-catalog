@@ -4,21 +4,35 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     // Debug: log what environment variables we're seeing
-    console.log("DATABASE_URL_SUPABASE:", process.env.DATABASE_URL_SUPABASE ? "SET" : "NOT SET");
+    const dbUrl = process.env.DATABASE_URL_SUPABASE;
+    console.log("DATABASE_URL_SUPABASE:", dbUrl ? "SET" : "NOT SET");
+    
+    if (dbUrl) {
+      const urlInfo = {
+        host: dbUrl.match(/@([^:]+)/)?.[1],
+        port: dbUrl.match(/:(\d+)\/postgres/)?.[1],
+        hasSSL: dbUrl.includes('sslmode=require'),
+        isPooler: dbUrl.includes('pooler.supabase.com')
+      };
+      console.log("Connection URL analysis:", urlInfo);
+    }
 
     // Skip database operations during build time
-    if (process.env.NODE_ENV === "development" && !process.env.DATABASE_URL_SUPABASE) {
+    if (process.env.NODE_ENV === "development" && !dbUrl) {
       return NextResponse.json({ ok: true, db: "build", projects: 0 });
+    }
+
+    if (!dbUrl) {
+      return NextResponse.json(
+        { ok: false, db: "down", error: "DATABASE_URL_SUPABASE not configured" },
+        { status: 500 }
+      );
     }
 
     const count = await prisma.project.count();
     return NextResponse.json({ ok: true, db: "up", projects: count });
   } catch (error) {
     console.error("Database connection failed:", error);
-    console.error("Connection details:", {
-      host: process.env.DATABASE_URL_SUPABASE?.match(/@([^:]+)/)?.[1],
-      port: process.env.DATABASE_URL_SUPABASE?.match(/:(\d+)/)?.[1]
-    });
     const errorCode = error && typeof error === 'object' && 'code' in error ? error.code : 'UNKNOWN';
     return NextResponse.json(
       { ok: false, db: "down", error: String(error), code: errorCode },
