@@ -1,4 +1,3 @@
-
 import React from "react";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
@@ -7,7 +6,7 @@ import ProjectActions from "@/components/ProjectActions";
 
 export default async function ProjectPage({ params }: { params: { id: string } }) {
   const id = Number(params.id);
-  
+
   if (isNaN(id)) {
     notFound();
   }
@@ -78,13 +77,10 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
             <div>
               <h2 className="text-lg font-semibold mb-2">Tools Used</h2>
-              <div className="space-y-1">
-                {project.tools.map((t) => (
-                  <div 
-                    key={t.tool.id} 
-                    className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm inline-block"
-                  >
-                    {t.tool.name}
+              <div className="flex flex-col gap-1 mt-1">
+                {project.tools.map((pt) => (
+                  <div key={pt.tool.name} className="text-black">
+                    {pt.tool.name}
                   </div>
                 ))}
               </div>
@@ -98,9 +94,9 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                 {project.links.map((link, index) => (
                   <div key={index}>
                     <span className="inline-block w-16 text-sm font-medium">{link.type}:</span>
-                    <a 
-                      href={link.url} 
-                      target="_blank" 
+                    <a
+                      href={link.url}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-700 hover:underline"
                     >
