@@ -155,23 +155,14 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
         <ul className="mt-2 space-y-6">
           {filtered.map((p) => (
             <li key={p.id} className="list-disc pl-4">
-              <h3 className="text-base font-medium text-black">{p.title}</h3>
-
-              {/* ACTIONS: small purple buttons, side-by-side */}
-              <div className="mt-1 flex items-center space-x-2">
+              <h3 className="text-base font-medium text-black">
                 <Link
                   href={`/projects/${p.id}`}
-                  className="inline-flex items-center rounded-md bg-purple-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="text-black hover:text-purple-600 hover:underline"
                 >
-                  View
+                  {p.title}
                 </Link>
-                <Link
-                  href={`/admin?edit=${p.id}`}
-                  className="inline-flex items-center rounded-md bg-purple-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                >
-                  Edit
-                </Link>
-              </div>
+              </h3>
 
               {p.summary ? (
                 <p className="mt-3 max-w-3xl text-sm leading-6 text-black">{p.summary}</p>
