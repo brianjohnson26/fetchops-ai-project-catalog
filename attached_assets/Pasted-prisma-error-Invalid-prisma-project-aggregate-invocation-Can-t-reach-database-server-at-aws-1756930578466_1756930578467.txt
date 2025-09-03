@@ -1,0 +1,53 @@
+prisma:error 
+Invalid `prisma.project.aggregate()` invocation:
+
+
+Can't reach database server at `aws-1-us-east-2.pooler.supabase.com:5432`
+
+Please make sure your database server is running at `aws-1-us-east-2.pooler.supabase.com:5432`.
+PrismaClientKnownRequestError: 
+Invalid `prisma.project.aggregate()` invocation:
+
+
+Can't reach database server at `aws-1-us-east-2.pooler.supabase.com:5432`
+
+Please make sure your database server is running at `aws-1-us-east-2.pooler.supabase.com:5432`.
+    at Ln.handleRequestError (/home/runner/workspace/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/runtime/library.js:121:7753)
+    at Ln.handleAndLogRequestError (/home/runner/workspace/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/runtime/library.js:121:7061)
+    at Ln.request (/home/runner/workspace/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/runtime/library.js:121:6745)
+    at async l (/home/runner/workspace/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/runtime/library.js:130:9633)
+    at async Promise.all (index 2)
+    at async n (/home/runner/workspace/.next/server/app/page.js:1:3700)
+    at async i (/home/runner/workspace/.next/server/app/page.js:1:4126) {
+  code: 'P1001',
+  clientVersion: '5.19.1',
+  meta: {
+    modelName: 'Project',
+    database_host: 'aws-1-us-east-2.pooler.supabase.com',
+    database_port: 5432
+  },
+  digest: '835191007'
+}
+PrismaClientKnownRequestError: 
+Invalid `prisma.project.aggregate()` invocation:
+
+
+Can't reach database server at `aws-1-us-east-2.pooler.supabase.com:5432`
+
+Please make sure your database server is running at `aws-1-us-east-2.pooler.supabase.com:5432`.
+    at Ln.handleRequestError (/home/runner/workspace/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/runtime/library.js:121:7753)
+    at Ln.handleAndLogRequestError (/home/runner/workspace/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/runtime/library.js:121:7061)
+    at Ln.request (/home/runner/workspace/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/runtime/library.js:121:6745)
+    at async l (/home/runner/workspace/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/runtime/library.js:130:9633)
+    at async Promise.all (index 2)
+    at async n (/home/runner/workspace/.next/server/app/page.js:1:3700)
+    at async i (/home/runner/workspace/.next/server/app/page.js:1:4126) {
+  code: 'P1001',
+  clientVersion: '5.19.1',
+  meta: {
+    modelName: 'Project',
+    database_host: 'aws-1-us-east-2.pooler.supabase.com',
+    database_port: 5432
+  },
+  digest: '835191007'
+}
