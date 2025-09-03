@@ -193,7 +193,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
                 <div className="mt-3 max-w-3xl text-sm leading-6 text-black whitespace-pre-line">{p.summary}</div>
               ) : null}
 
-              <div className="mt-3 text-sm text-black space-y-1">
+              <div className="mt-6 text-sm text-black space-y-1">
                 {p.team ? <div>Team: {p.team}</div> : null}
                 {p.owner ? <div>Owner: {p.owner}</div> : null}
                 {p.tools.length > 0 ? (
