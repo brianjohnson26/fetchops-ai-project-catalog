@@ -236,7 +236,8 @@ fieldset .grid label {
   align-items: center;
   gap: 8px;
   vertical-align: middle;
-  line-height: 1.15;
+  line-height: 1.2;
+  margin: 2px 0;
 }
 /* Header accent bar (purple→orange) */
 header::after {
