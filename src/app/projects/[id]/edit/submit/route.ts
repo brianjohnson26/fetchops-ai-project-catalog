@@ -16,9 +16,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const projectId = Number(params.id);
   const form = await req.formData();
 
-  const title = String(form.get("title") || "");
-  const description = String(form.get("description") || "");
-  const team = String(form.get("team") || "");
+  const title = String(form.get("title") || "").trim();
+  const description = String(form.get("description") || "").trim();
+  const team = String(form.get("team") || "").trim();
 
   // Read owner (accept older field name too), trim and strip leading @
   const owner =
@@ -27,6 +27,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       .replace(/^@+/, "");
 
   const hoursSavedPerWeek = Number(form.get("hoursSavedPerWeek") || 0);
+
+  // Additional fields
+  const howYouBuiltIt = String(form.get("howYouBuiltIt") || "").trim() || null;
+  const challengesSolutionsTips = String(form.get("challengesSolutionsTips") || "").trim() || null;
+  const otherImpacts = String(form.get("otherImpacts") || "").trim() || null;
 
   const selectedNames = form.getAll("toolNames").map((v) => String(v));
   const groups = ["llms", "automation", "data", "apps", "fetch"];
@@ -53,6 +58,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       team,
       owner,
       hoursSavedPerWeek,
+      howYouBuiltIt,
+      challengesSolutionsTips,
+      otherImpacts,
       tools: {
         deleteMany: {},
         create: allToolNames.map((name) => ({

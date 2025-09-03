@@ -46,6 +46,37 @@ export default async function EditProject({ params }: { params: { id: string } }
         <label>Title<input name="title" defaultValue={p.title} required /></label>
         <label>Description<textarea name="description" rows={5} defaultValue={p.description} required /></label>
 
+        {/* NEW FIELDS */}
+        <label>
+          How You Built It
+          <textarea
+            name="howYouBuiltIt"
+            rows={4}
+            placeholder="Workflow summary and/or diagram notes"
+            defaultValue={p.howYouBuiltIt || ""}
+          />
+        </label>
+
+        <label>
+          Challenges / Solutions / Tips
+          <textarea
+            name="challengesSolutionsTips"
+            rows={4}
+            placeholder="What was hard? How did you solve it? Any advice for others?"
+            defaultValue={p.challengesSolutionsTips || ""}
+          />
+        </label>
+
+        <label>
+          Other Qualitative or Quantitative Impacts
+          <textarea
+            name="otherImpacts"
+            rows={4}
+            placeholder="e.g., quality improvements, NPS, CSAT, fewer escalations, speedups, accuracy deltas, etc."
+            defaultValue={p.otherImpacts || ""}
+          />
+        </label>
+
         {/* Team picklist */}
         <label>
           Team
