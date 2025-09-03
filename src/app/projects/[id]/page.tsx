@@ -78,14 +78,14 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
             <div>
               <h2 className="text-lg font-semibold mb-2">Tools Used</h2>
-              <div className="flex flex-wrap gap-2">
+              <div className="space-y-1">
                 {project.tools.map((t) => (
-                  <span 
+                  <div 
                     key={t.tool.id} 
-                    className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm"
+                    className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm inline-block"
                   >
                     {t.tool.name}
-                  </span>
+                  </div>
                 ))}
               </div>
             </div>
