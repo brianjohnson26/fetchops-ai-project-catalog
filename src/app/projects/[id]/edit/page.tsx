@@ -79,6 +79,16 @@ export default async function EditProject({ params }: { params: { id: string } }
           />
         </label>
 
+        <label>
+          Next Steps / Future Enhancements
+          <textarea
+            name="nextSteps"
+            rows={4}
+            placeholder="What improvements or additional features are planned? What would you like to build next?"
+            defaultValue={p.nextSteps || ""}
+          />
+        </label>
+
         {/* Team picklist */}
         <label>
           Team

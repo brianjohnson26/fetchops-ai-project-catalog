@@ -32,6 +32,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const howYouBuiltIt = String(form.get("howYouBuiltIt") || "").trim() || null;
   const challengesSolutionsTips = String(form.get("challengesSolutionsTips") || "").trim() || null;
   const otherImpacts = String(form.get("otherImpacts") || "").trim() || null;
+  const nextSteps = String(form.get("nextSteps") || "").trim() || null;
 
   const selectedNames = form.getAll("toolNames").map((v) => String(v));
   const groups = ["llms", "automation", "data", "apps", "fetch"];
@@ -61,6 +62,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       howYouBuiltIt,
       challengesSolutionsTips,
       otherImpacts,
+      nextSteps,
       tools: {
         deleteMany: {},
         create: allToolNames.map((name) => ({

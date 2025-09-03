@@ -66,6 +66,15 @@ export default function NewProject() {
           />
         </label>
 
+        <label>
+          Next Steps / Future Enhancements
+          <textarea
+            name="nextSteps"
+            rows={4}
+            placeholder="What improvements or additional features are planned? What would you like to build next?"
+          />
+        </label>
+
         {/* Team as picklist */}
         <label>
           Team

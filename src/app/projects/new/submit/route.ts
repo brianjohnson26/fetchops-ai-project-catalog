@@ -26,9 +26,10 @@ export async function POST(req: NextRequest) {
   const hoursSavedPerWeek = Number(form.get("hoursSavedPerWeek") || 0);
 
   // NEW FIELDS
-  const howYouBuiltIt = form.get("howYouBuiltIt")?.toString() || null;
-  const challengesSolutionsTips = form.get("challengesSolutionsTips")?.toString() || null;
-  const otherImpacts = form.get("otherImpacts")?.toString() || null;
+  const howYouBuiltIt = String(form.get("howYouBuiltIt") || "").trim() || null;
+  const challengesSolutionsTips = String(form.get("challengesSolutionsTips") || "").trim() || null;
+  const otherImpacts = String(form.get("otherImpacts") || "").trim() || null;
+  const nextSteps = String(form.get("nextSteps") || "").trim() || null;
 
   // tools from checkboxes + freeform
   const selectedNames = form.getAll("toolNames").map((v) => String(v));
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
       howYouBuiltIt,
       challengesSolutionsTips,
       otherImpacts,
+      nextSteps,
       tools: {
         create: allToolNames.map((name) => ({
           tool: { connectOrCreate: { where: { name }, create: { name } } },

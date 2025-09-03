@@ -64,6 +64,13 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             </div>
           )}
 
+          {project.nextSteps && (
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Next Steps / Future Enhancements</h2>
+              <div className="text-gray-700 leading-relaxed" style={{ whiteSpace: 'pre-line' }}>{project.nextSteps}</div>
+            </div>
+          )}
+
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h2 className="text-lg font-semibold mb-2">Project Details</h2>
