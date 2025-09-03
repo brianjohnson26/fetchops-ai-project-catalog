@@ -71,7 +71,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
         {/* Filters */}
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="col-span-1 md:col-span-3">
-            <label className="mb-1 block text-sm font-medium">Keyword</label>
+            <label className="mb-1 block text-sm font-medium text-black">Keyword</label>
             <div className="relative">
               <input
                 type="text"
@@ -84,7 +84,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">Team</label>
+            <label className="mb-1 block text-sm font-medium text-black">Team</label>
             <select
               value={team}
               onChange={(e) => setTeam(e.target.value)}
@@ -100,7 +100,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">Owner</label>
+            <label className="mb-1 block text-sm font-medium text-black">Owner</label>
             <select
               value={owner}
               onChange={(e) => setOwner(e.target.value)}
@@ -117,7 +117,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
 
           <div className="md:col-span-3">
             <details className="rounded-md border border-gray-200 bg-gray-50 p-3">
-              <summary className="cursor-pointer select-none text-sm font-medium">
+              <summary className="cursor-pointer select-none text-sm font-medium text-black">
                 Tools
               </summary>
               <div className="mt-3 flex flex-wrap gap-3">
@@ -131,7 +131,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
                 {allTools.map((t) => {
                   const checked = !!toolFilter[t];
                   return (
-                    <label key={t} className="flex items-center gap-2 text-sm">
+                    <label key={t} className="flex items-center gap-2 text-sm text-black">
                       <input
                         type="checkbox"
                         checked={checked}
