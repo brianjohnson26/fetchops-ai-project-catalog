@@ -263,19 +263,19 @@ export default function BrowseFilters({ projects }: { projects: Project[] }) {
         {filtered.map((p) => {
           const pt = toList(p.tools);
           return (
-            <li key={p.id} className="border-2 border-purple-200 rounded-2xl p-4 shadow-sm">
+            <li key={p.id} className="border-2 border-gray-300 rounded-2xl p-4 shadow-sm bg-white">
               <div className="flex justify-between items-start mb-1">
                 <div className="text-lg font-semibold">{p.title}</div>
-                <div className="flex gap-3">
+                <div className="flex gap-6">
                   <a 
                     href={`/projects/${p.id}`} 
-                    className="btn-linklike"
+                    className="px-3 py-1 bg-purple-600 text-white rounded text-xs font-medium hover:bg-purple-700 transition-colors"
                   >
                     View
                   </a>
                   <a 
                     href={`/projects/${p.id}/edit`} 
-                    className="btn-linklike"
+                    className="px-3 py-1 bg-purple-600 text-white rounded text-xs font-medium hover:bg-purple-700 transition-colors"
                   >
                     Edit
                   </a>
