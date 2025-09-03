@@ -55,14 +55,14 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
     <div className="mx-auto max-w-5xl">
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         {/* Header with title and export button */}
-        <div className="flex justify-between items-start mb-6">
-          <div className="flex-1">
+        <div className="flex justify-between items-center mb-6" style={{ width: '100%' }}>
+          <div style={{ flex: '0 1 auto' }}>
             <h1 className="text-3xl font-semibold text-black">Browse AI Projects</h1>
             <p className="mt-2 text-gray-600">
               Filter by keyword, team, owner, and tools.
             </p>
           </div>
-          <div className="flex-shrink-0 ml-4">
+          <div style={{ flex: '0 0 auto', marginLeft: '24px' }}>
             <a
               href="/api/projects-csv"
               style={{
@@ -75,7 +75,8 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
                 fontSize: '14px',
                 fontWeight: '600',
                 textDecoration: 'none',
-                transition: 'background-color 0.15s ease'
+                transition: 'background-color 0.15s ease',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#300d38'}
               onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#6d28d9'}
