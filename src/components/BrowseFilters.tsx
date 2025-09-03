@@ -193,9 +193,9 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
                 <div className="mt-3 max-w-3xl text-sm leading-6 text-black whitespace-pre-line">{p.summary}</div>
               ) : null}
 
-              <div className="mt-6 text-sm text-black space-y-1">
-                {p.team ? <div>Team: {p.team}</div> : null}
-                {p.owner ? <div>Owner: {p.owner}</div> : null}
+              <div style={{ marginTop: '24px', fontSize: '14px', color: 'black' }}>
+                {p.team ? <div style={{ marginBottom: '4px' }}>Team: {p.team}</div> : null}
+                {p.owner ? <div style={{ marginBottom: '4px' }}>Owner: {p.owner}</div> : null}
                 {p.tools.length > 0 ? (
                   <div>
                     Tools: {p.tools.map((t) => t.tool.name).join(" · ")}
