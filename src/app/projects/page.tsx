@@ -54,40 +54,11 @@ export default async function ProjectsPage() {
   const allTools = Array.from(new Set(projects.flatMap(p => p.tools.map(t => t.tool.name))));
 
   return (
-    <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
-      <div className="card">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h1 className="text-2xl font-bold text-black">Browse AI Projects</h1>
-            <p className="text-sm text-black mt-1">
-              Filter by keyword, team, owner, and tools.
-            </p>
-          </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <a 
-              href="/api/projects-csv" 
-              download="projects.csv"
-              className="btn-linklike"
-            >
-              Export CSV
-            </a>
-          </div>
-        </div>
-
-        <BrowseFilters 
-          projects={projects} 
-          allTeams={allTeams}
-          allOwners={allOwners}
-          allTools={allTools}
-        />
-
-        {projects.length === 0 && (
-          <div className="mt-6 rounded-xl border p-4 text-sm text-black">
-            No projects found in the database yet. Add a project on the Admin page,
-            then refresh this page.
-          </div>
-        )}
-      </div>
-    </div>
+    <BrowseFilters 
+      projects={projects} 
+      allTeams={allTeams}
+      allOwners={allOwners}
+      allTools={allTools}
+    />
   );
 }
