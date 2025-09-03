@@ -280,7 +280,6 @@ export default function BrowseFilters({ projects }: { projects: Project[] }) {
                     Edit
                   </a>
                 </div>
-                </div>
               </div>
               {p.summary ? (
                 <p className="text-sm text-gray-700 mb-3 line-clamp-3">{p.summary}</p>
