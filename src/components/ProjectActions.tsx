@@ -31,6 +31,8 @@ export default function ProjectActions({ projectId }: { projectId: number }) {
       >
         Edit
       </a>
+        Edit
+      </a>
       <button 
         onClick={handleDelete}
         className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors shadow-sm font-medium text-sm inline-flex items-center"
