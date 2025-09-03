@@ -105,7 +105,7 @@ export default function NewProject() {
 
         {/* Links (optional, up to 3) */}
         <fieldset className="card" style={{ padding: 12 }}>
-          <legend className="text-sm" style={{ padding: "0 6px" }}>Links (optional)</legend>
+          <legend className="text-sm" style={{ padding: "0 6px" }}>Links - Include a demo, a link to the app/tool, and any other URLs relevant to the project</legend>
 
           {[1, 2, 3].map((i) => (
             <div key={i} className="grid" style={{ gridTemplateColumns: "200px 1fr", gap: 12, alignItems: "end", marginTop: i === 1 ? 0 : 8 }}>
