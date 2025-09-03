@@ -32,8 +32,8 @@ export default async function ProjectPage({ params }: { params: { id: string } }
       </div>
 
       <div className="bg-white border rounded-2xl p-6">
-        <div className="flex justify-between items-start mb-4">
-          <h1 className="text-3xl font-bold">{project.title}</h1>
+        <div className="mb-4">
+          <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
           <ProjectActions projectId={project.id} />
         </div>
 

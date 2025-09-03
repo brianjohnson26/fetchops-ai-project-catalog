@@ -24,16 +24,16 @@ export default function ProjectActions({ projectId }: { projectId: number }) {
   };
 
   return (
-    <div className="flex gap-4">
+    <div className="flex justify-between items-center w-full">
       <a 
         href={`/projects/${projectId}/edit`}
-        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-sm font-medium text-sm inline-flex items-center"
+        className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-sm font-medium text-sm inline-flex items-center min-w-[80px] justify-center"
       >
         Edit
       </a>
       <button 
         onClick={handleDelete}
-        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors shadow-sm font-medium text-sm inline-flex items-center"
+        className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors shadow-sm font-medium text-sm inline-flex items-center min-w-[80px] justify-center"
       >
         Delete
       </button>
