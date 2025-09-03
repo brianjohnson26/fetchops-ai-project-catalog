@@ -6,8 +6,8 @@
 :root {
   --bg: #f8fafc;
   --panel: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
+  --text: #000000;
+  --muted: #000000;
   --border: #e5e7eb;
 
   /* Brand colors (purple + orange) */
@@ -155,7 +155,7 @@ button:active {
 
 .text-sm {
   font-size: 0.9rem;
-  color: var(--muted);
+  color: var(--text);
 }
 
 /* Simple fade-in */
