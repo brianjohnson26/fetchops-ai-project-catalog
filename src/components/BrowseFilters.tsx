@@ -153,8 +153,16 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
         </div>
 
         {/* Results with Export CSV button */}
-        <div className="mt-6 flex justify-between items-center">
-          <div className="text-sm text-black">Showing {count} project{count === 1 ? "" : "s"}</div>
+        <div style={{ 
+          marginTop: '24px', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          width: '100%'
+        }}>
+          <div style={{ fontSize: '14px', color: 'black' }}>
+            Showing {count} project{count === 1 ? "" : "s"}
+          </div>
           <a
             href="/api/projects-csv"
             style={{
@@ -168,7 +176,8 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
               fontWeight: '600',
               textDecoration: 'none',
               transition: 'background-color 0.15s ease',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
+              marginLeft: 'auto'
             }}
             onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#300d38'}
             onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#6d28d9'}
