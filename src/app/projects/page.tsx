@@ -48,6 +48,11 @@ async function getProjects(): Promise<BrowseProject[]> {
 export default async function ProjectsPage() {
   const projects = await getProjects();
 
+  // Extract unique values for filters
+  const allTeams = Array.from(new Set(projects.map(p => p.team).filter(Boolean))) as string[];
+  const allOwners = Array.from(new Set(projects.map(p => p.owner).filter(Boolean))) as string[];
+  const allTools = Array.from(new Set(projects.flatMap(p => p.tools.map(t => t.tool.name))));
+
   return (
     <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
       <div className="card">
@@ -69,7 +74,12 @@ export default async function ProjectsPage() {
           </div>
         </div>
 
-        <BrowseFilters projects={projects} />
+        <BrowseFilters 
+          projects={projects} 
+          allTeams={allTeams}
+          allOwners={allOwners}
+          allTools={allTools}
+        />
 
         {projects.length === 0 && (
           <div className="mt-6 rounded-xl border p-4 text-sm text-gray-700">
