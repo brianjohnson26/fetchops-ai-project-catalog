@@ -1,312 +1,195 @@
-'use client';
+// src/components/BrowseFilters.tsx
+"use client";
 
-import React, { useMemo, useState } from 'react';
-
-type MaybeStr = string | null | undefined;
-type MaybeTools = string[] | string | null | undefined;
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
 export type Project = {
   id: string;
   title: string;
-  summary?: MaybeStr;
-  team?: MaybeStr;
-  owner?: MaybeStr; // name or Slack handle
-  tools?: MaybeTools; // string[] or comma-separated string
+  summary?: string | null;
+  team?: string | null;
+  owner?: string | null;
+  tools: { tool: { name: string } }[];
 };
 
-function toList(val: MaybeTools): string[] {
-  if (!val) return [];
-  if (Array.isArray(val)) {
-    return val.map((t) => String(t).trim()).filter(Boolean);
-  }
-  return String(val)
-    .split(/[,/|]/g)
-    .map((t) => t.trim())
-    .filter(Boolean);
-}
+type Props = {
+  projects: Project[];
+  allTeams: string[];
+  allOwners: string[];
+  allTools: string[];
+};
 
-function normalize(s: MaybeStr): string {
-  return (s ?? '').toLowerCase();
-}
-
-export default function BrowseFilters({ projects }: { projects: Project[] }) {
-  const [keyword, setKeyword] = useState('');
-  const [team, setTeam] = useState<string>('all');
-  const [owner, setOwner] = useState<string>('all');
-  const [selectedTools, setSelectedTools] = useState<Set<string>>(new Set());
-
-  // Build option lists
-  const { teams, owners, tools } = useMemo(() => {
-    const tset = new Set<string>();
-    const oset = new Set<string>();
-    const toolset = new Set<string>();
-
-    for (const p of projects) {
-      const t = (p.team ?? '').trim();
-      if (t) tset.add(t);
-
-      const o = (p.owner ?? '').trim();
-      if (o) oset.add(o);
-
-      for (const tool of toList(p.tools)) {
-        if (tool) toolset.add(tool);
-      }
-    }
-
-    return {
-      teams: Array.from(tset).sort((a, b) => a.localeCompare(b)),
-      owners: Array.from(oset).sort((a, b) => a.localeCompare(b)),
-      tools: Array.from(toolset).sort((a, b) => a.localeCompare(b)),
-    };
-  }, [projects]);
+export default function BrowseFilters({ projects, allTeams, allOwners, allTools }: Props) {
+  const [keyword, setKeyword] = useState("");
+  const [team, setTeam] = useState<string>("__ALL__");
+  const [owner, setOwner] = useState<string>("__ALL__");
+  const [toolFilter, setToolFilter] = useState<Record<string, boolean>>({});
 
   const filtered = useMemo(() => {
-    const kw = normalize(keyword);
-
+    const kw = keyword.trim().toLowerCase();
     return projects.filter((p) => {
-      if (kw) {
-        const haystack = [
-          p.title,
-          p.summary,
-          p.owner,
-          toList(p.tools).join(' '),
-        ]
-          .map(normalize)
-          .join(' ');
-        if (!haystack.includes(kw)) return false;
-      }
+      if (team !== "__ALL__" && (p.team ?? "") !== team) return false;
+      if (owner !== "__ALL__" && (p.owner ?? "") !== owner) return false;
 
-      if (team !== 'all') {
-        const pTeam = normalize(p.team);
-        if (pTeam !== normalize(team)) return false;
-      }
-
-      if (owner !== 'all') {
-        const pOwner = normalize(p.owner);
-        if (pOwner !== normalize(owner)) return false;
-      }
-
-      if (selectedTools.size > 0) {
-        const pt = new Set(toList(p.tools).map((t) => normalize(t)));
-        let hasAny = false;
-        for (const sel of selectedTools) {
-          if (pt.has(normalize(sel))) {
-            hasAny = true;
-            break;
-          }
-        }
+      // tools filter (if any tool is ticked, require at least one match)
+      const activeTools = Object.keys(toolFilter).filter((k) => toolFilter[k]);
+      if (activeTools.length > 0) {
+        const projectToolNames = new Set(p.tools.map((t) => t.tool.name));
+        const hasAny = activeTools.some((t) => projectToolNames.has(t));
         if (!hasAny) return false;
       }
 
-      return true;
+      if (!kw) return true;
+      const hay =
+        `${p.title ?? ""} ${p.summary ?? ""} ${p.team ?? ""} ${p.owner ?? ""} ${p.tools
+          .map((t) => t.tool.name)
+          .join(" ")}`.toLowerCase();
+      return hay.includes(kw);
     });
-  }, [projects, keyword, team, owner, selectedTools]);
+  }, [projects, keyword, team, owner, toolFilter]);
 
-  function toggleTool(tool: string) {
-    setSelectedTools((prev) => {
-      const next = new Set(prev);
-      if (next.has(tool)) next.delete(tool);
-      else next.add(tool);
-      return next;
-    });
-  }
-
-  function clearAll() {
-    setKeyword('');
-    setTeam('all');
-    setOwner('all');
-    setSelectedTools(new Set());
-  }
-
-  const selectedToolsCount = selectedTools.size;
+  const count = filtered.length;
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Top control bar: single row on md+; wraps on small screens */}
-      <div className="w-full flex flex-col md:flex-row md:items-center md:gap-4 gap-2">
-      {/* Keyword (flex-grow) */}
-        <div className="flex-1">
-          <label className="sr-only">Keyword</label>
-          <input
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="🔍 Type to search projects (real-time filtering)..."
-            className="w-full rounded-xl border p-2"
-          />
-        </div>
+    <div className="mx-auto max-w-5xl">
+      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h1 className="text-2xl font-semibold">Browse AI Projects</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Filter by keyword, team, owner, and tools.
+        </p>
 
-        {/* Team */}
-        <div className="min-w-40">
-          <label className="sr-only">Team</label>
-          <select
-            value={team}
-            onChange={(e) => setTeam(e.target.value)}
-            className="w-full rounded-xl border p-2"
-            aria-label="Filter by team"
+        <div className="mt-4">
+          <a
+            href="/api/projects-csv"
+            className="inline-flex items-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
-            <option value="all">All teams</option>
-            {teams.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
+            Export CSV
+          </a>
         </div>
 
-        {/* Owner */}
-        <div className="min-w-40">
-          <label className="sr-only">Owner</label>
-          <select
-            value={owner}
-            onChange={(e) => setOwner(e.target.value)}
-            className="w-full rounded-xl border p-2"
-            aria-label="Filter by owner"
-          >
-            <option value="all">All owners</option>
-            {owners.map((o) => (
-              <option key={o} value={o}>
-                {o}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Tools dropdown */}
-        <div className="relative">
-          <details className="group">
-            <summary
-              className="list-none select-none rounded-xl border p-2 cursor-pointer md:min-w-40"
-              aria-label="Filter by tools"
-            >
-              Tools{selectedToolsCount ? ` (${selectedToolsCount})` : ''}
-            </summary>
-            <div
-              className="absolute z-10 mt-2 w-72 max-h-72 overflow-auto rounded-xl border bg-white p-3 shadow"
-              role="menu"
-              aria-label="Tools menu"
-            >
-              {tools.length === 0 ? (
-                <div className="text-sm text-gray-500 p-2">
-                  No tools found in projects.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {tools.map((tool) => {
-                    const checked = selectedTools.has(tool);
-                    return (
-                      <label
-                        key={tool}
-                        className="flex items-center gap-2 text-sm cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleTool(tool)}
-                        />
-                        <span>{tool}</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              )}
-
-              <div className="mt-3 flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => setSelectedTools(new Set())}
-                  className="text-sm underline"
-                >
-                  Clear tools
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    // close <details>
-                    const el = (e.target as HTMLElement).closest('details') as HTMLDetailsElement | null;
-                    if (el) el.open = false;
-                  }}
-                  className="rounded-lg border px-3 py-1 text-sm"
-                >
-                  Done
-                </button>
-              </div>
+        {/* Filters */}
+        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="col-span-1 md:col-span-3">
+            <label className="mb-1 block text-sm font-medium">Keyword</label>
+            <div className="relative">
+              <input
+                type="text"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                placeholder="Type to search projects (real-time filtering)…"
+                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
             </div>
-          </details>
-        </div>
+          </div>
 
-        {/* Clear all */}
-        <div>
-          <button
-            onClick={clearAll}
-            className="rounded-xl border px-3 py-2 hover:bg-gray-50 w-full md:w-auto"
-            type="button"
-          >
-            Clear all
-          </button>
-        </div>
-      </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium">Team</label>
+            <select
+              value={team}
+              onChange={(e) => setTeam(e.target.value)}
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="__ALL__">All teams</option>
+              {allTeams.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      {/* Count and filter status */}
-      <div className="flex items-center gap-4 text-sm text-gray-600">
-        <span>
-          Showing <strong>{filtered.length}</strong> of {projects.length} projects
-        </span>
-        {(keyword || team !== 'all' || owner !== 'all' || selectedTools.size > 0) && (
-          <span className="text-blue-600 font-medium">
-            🔍 Filters active - results update automatically
-          </span>
-        )}
-      </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium">Owner</label>
+            <select
+              value={owner}
+              onChange={(e) => setOwner(e.target.value)}
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="__ALL__">All owners</option>
+              {allOwners.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      {/* Results */}
-      <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filtered.map((p) => {
-          const pt = toList(p.tools);
-          return (
-            <li key={p.id} className="border-2 border-gray-400 rounded-2xl p-4 shadow-md bg-white">
-              <div className="flex justify-between items-start mb-1">
-                <div className="text-lg font-semibold">{p.title}</div>
-                <div className="flex gap-2">
-                  <a
-                    href={`/projects/${p.id}`}
-                    className="px-3 py-1 bg-purple-600 text-white rounded text-sm font-medium hover:bg-purple-700 transition-colors"
-                  >
-                    View
-                  </a>
-                  <a
-                    href={`/projects/${p.id}/edit`}
-                    className="px-3 py-1 bg-purple-600 text-white rounded text-sm font-medium hover:bg-purple-700 transition-colors"
-                  >
-                    Edit
-                  </a>
-                </div>
+          <div className="md:col-span-3">
+            <details className="rounded-md border border-gray-200 bg-gray-50 p-3">
+              <summary className="cursor-pointer select-none text-sm font-medium">
+                Tools
+              </summary>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => setToolFilter({})}
+                  className="rounded-md bg-purple-100 px-2.5 py-1 text-xs font-medium text-purple-700 hover:bg-purple-200"
+                >
+                  Clear all
+                </button>
+                {allTools.map((t) => {
+                  const checked = !!toolFilter[t];
+                  return (
+                    <label key={t} className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(e) =>
+                          setToolFilter((prev) => ({ ...prev, [t]: e.target.checked }))
+                        }
+                        className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                      />
+                      <span>{t}</span>
+                    </label>
+                  );
+                })}
               </div>
+            </details>
+          </div>
+        </div>
+
+        {/* Results */}
+        <div className="mt-6 text-sm text-gray-500">Showing {count} project{count === 1 ? "" : "s"}</div>
+
+        <ul className="mt-2 space-y-6">
+          {filtered.map((p) => (
+            <li key={p.id} className="list-disc pl-4">
+              <h3 className="text-base font-medium text-gray-900">{p.title}</h3>
+
+              {/* ACTIONS: small purple buttons, side-by-side */}
+              <div className="mt-1 flex items-center space-x-2">
+                <Link
+                  href={`/projects/${p.id}`}
+                  className="inline-flex items-center rounded-md bg-purple-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  View
+                </Link>
+                <Link
+                  href={`/admin?edit=${p.id}`}
+                  className="inline-flex items-center rounded-md bg-purple-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  Edit
+                </Link>
+              </div>
+
               {p.summary ? (
-                <p className="text-sm text-gray-700 mb-3 line-clamp-3">{p.summary}</p>
+                <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-700">{p.summary}</p>
               ) : null}
-              <div className="flex flex-wrap gap-2 text-xs text-gray-600 mb-2">
-                {p.team ? <span className="px-2 py-1 border rounded-full">Team: {p.team}</span> : null}
-                {p.owner ? <span className="px-2 py-1 border rounded-full">Owner: {p.owner}</span> : null}
-              </div>
-              {pt.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {pt.map((t) => (
-                    <span key={t} className="text-xs px-2 py-1 border rounded-full text-black">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
-            </li>
-          );
-        })}
-      </ul>
 
-      {filtered.length === 0 && (
-        <div className="text-sm text-gray-600">
-          No projects match the current filters.
-        </div>
-      )}
+              <div className="mt-3 text-sm text-gray-700">
+                {p.team ? <span className="mr-4">Team: {p.team}</span> : null}
+                {p.owner ? <span className="mr-4">Owner: {p.owner}</span> : null}
+                {p.tools.length > 0 ? (
+                  <span>
+                    {p.tools.map((t) => t.tool.name).join(" · ")}
+                  </span>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
