@@ -58,8 +58,8 @@ export default async function ProjectsPage() {
       <div className="card">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="text-2xl font-bold">Browse AI Projects</h1>
-            <p className="text-sm text-gray-600 mt-1">
+            <h1 className="text-2xl font-bold text-black">Browse AI Projects</h1>
+            <p className="text-sm text-black mt-1">
               Filter by keyword, team, owner, and tools.
             </p>
           </div>
@@ -82,7 +82,7 @@ export default async function ProjectsPage() {
         />
 
         {projects.length === 0 && (
-          <div className="mt-6 rounded-xl border p-4 text-sm text-gray-700">
+          <div className="mt-6 rounded-xl border p-4 text-sm text-black">
             No projects found in the database yet. Add a project on the Admin page,
             then refresh this page.
           </div>
