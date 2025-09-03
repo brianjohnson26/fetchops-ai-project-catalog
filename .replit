@@ -12,6 +12,14 @@ build = ["sh", "-c", "DATABASE_URL_SUPABASE=$DATABASE_URL_SUPABASE npx --yes pnp
 localPort = 3000
 externalPort = 80
 
+[[ports]]
+localPort = 5555
+externalPort = 3000
+
+[[ports]]
+localPort = 5556
+externalPort = 3001
+
 [workflows]
 runButton = "Production"
 
