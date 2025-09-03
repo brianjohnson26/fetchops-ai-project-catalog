@@ -61,8 +61,7 @@ export default async function ProjectsPage() {
           <div className="flex gap-2">
             <a 
               href="/api/projects-csv" 
-              className="px-4 py-2 text-white rounded-lg hover:opacity-90 text-sm font-medium transition-opacity"
-              style={{ backgroundColor: 'var(--brand-purple)' }}
+              className="px-4 py-2 bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition-colors border border-purple-300 shadow-sm font-medium text-sm"
               download="projects.csv"
             >
               Export CSV
