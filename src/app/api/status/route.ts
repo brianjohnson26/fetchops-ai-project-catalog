@@ -16,8 +16,12 @@ export async function GET() {
     return NextResponse.json({ ok: true, db: "up", projects: count });
   } catch (error) {
     console.error("Database connection failed:", error);
+    console.error("Connection details:", {
+      host: process.env.DATABASE_URL_SUPABASE?.match(/@([^:]+)/)?.[1],
+      port: process.env.DATABASE_URL_SUPABASE?.match(/:(\d+)/)?.[1]
+    });
     return NextResponse.json(
-      { ok: false, db: "down", error: String(error) },
+      { ok: false, db: "down", error: String(error), code: error.code || 'UNKNOWN' },
       { status: 500 }
     );
   }
