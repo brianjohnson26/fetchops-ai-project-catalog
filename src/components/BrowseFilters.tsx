@@ -65,7 +65,20 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
           </div>
           <a
             href="/api/projects-csv"
-            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '8px 16px',
+              backgroundColor: '#6d28d9',
+              color: 'white',
+              borderRadius: '6px',
+              fontSize: '14px',
+              fontWeight: '600',
+              textDecoration: 'none',
+              transition: 'background-color 0.15s ease'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#300d38'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#6d28d9'}
           >
             Export CSV
           </a>
