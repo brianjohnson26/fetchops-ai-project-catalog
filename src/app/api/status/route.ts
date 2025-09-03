@@ -7,6 +7,11 @@ export async function GET() {
     console.log("DATABASE_URL_SUPABASE:", process.env.DATABASE_URL_SUPABASE ? "SET" : "NOT SET");
     console.log("DATABASE_URL:", process.env.DATABASE_URL ? "SET" : "NOT SET");
 
+    // Skip database operations during build time
+    if (process.env.NODE_ENV === "development" && !process.env.DATABASE_URL_SUPABASE) {
+      return NextResponse.json({ ok: true, db: "build", projects: 0 });
+    }
+
     const count = await prisma.project.count();
     return NextResponse.json({ ok: true, db: "up", projects: count });
   } catch (error) {
