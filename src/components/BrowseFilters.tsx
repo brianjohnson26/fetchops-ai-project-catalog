@@ -1,3 +1,4 @@
+
 // src/components/BrowseFilters.tsx
 "use client";
 
@@ -55,16 +56,16 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
     <div className="mx-auto max-w-5xl">
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         {/* Header with title and export button */}
-        <div className="flex justify-between items-start mb-4">
+        <div className="flex justify-between items-start mb-6">
           <div>
             <h1 className="text-2xl font-semibold text-black">Browse AI Projects</h1>
-            <p className="mt-1 text-sm text-black">
+            <p className="mt-1 text-sm text-gray-600">
               Filter by keyword, team, owner, and tools.
             </p>
           </div>
           <a
             href="/api/projects-csv"
-            className="inline-flex items-center rounded-md bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="inline-flex items-center rounded-md bg-gray-100 border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300"
           >
             Export CSV
           </a>
@@ -77,19 +78,19 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Type to search projects (real-time filtering)…"
-            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            placeholder="Type to search projects (real-time filtering)..."
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
 
-        {/* Filters row */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div>
+        {/* Filters row - horizontal layout */}
+        <div className="flex gap-6 mb-6">
+          <div className="flex-1">
             <label className="mb-2 block text-sm font-medium text-black">Team</label>
             <select
               value={team}
               onChange={(e) => setTeam(e.target.value)}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             >
               <option value="__ALL__">All teams</option>
               {allTeams.map((t) => (
@@ -100,12 +101,12 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
             </select>
           </div>
 
-          <div>
+          <div className="flex-1">
             <label className="mb-2 block text-sm font-medium text-black">Owner</label>
             <select
               value={owner}
               onChange={(e) => setOwner(e.target.value)}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             >
               <option value="__ALL__">All owners</option>
               {allOwners.map((o) => (
@@ -116,7 +117,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
             </select>
           </div>
 
-          <div>
+          <div className="flex-1">
             <label className="mb-2 block text-sm font-medium text-black">Tools</label>
             <select
               value={Object.keys(toolFilter).find(k => toolFilter[k]) || "__ALL__"}
@@ -127,7 +128,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
                   setToolFilter({ [e.target.value]: true });
                 }
               }}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             >
               <option value="__ALL__">All tools</option>
               {allTools.map((t) => (
