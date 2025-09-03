@@ -165,7 +165,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
               </h3>
 
               {p.summary ? (
-                <p className="mt-3 max-w-3xl text-sm leading-6 text-black">{p.summary}</p>
+                <div className="mt-3 max-w-3xl text-sm leading-6 text-black whitespace-pre-line">{p.summary}</div>
               ) : null}
 
               <div className="mt-3 text-sm text-black">
