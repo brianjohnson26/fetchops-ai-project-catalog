@@ -40,27 +40,27 @@ export default async function ProjectPage({ params }: { params: { id: string } }
         <div className="grid gap-6">
           <div>
             <h2 className="text-lg font-semibold mb-2">Description</h2>
-            <div className="text-gray-700 whitespace-pre-line leading-relaxed">{project.description}</div>
+            <div className="text-gray-700 leading-relaxed" style={{ whiteSpace: 'pre-line' }}>{project.description}</div>
           </div>
 
           {project.howYouBuiltIt && (
             <div>
               <h2 className="text-lg font-semibold mb-2">How You Built It</h2>
-              <div className="text-gray-700 whitespace-pre-line leading-relaxed">{project.howYouBuiltIt}</div>
+              <div className="text-gray-700 leading-relaxed" style={{ whiteSpace: 'pre-line' }}>{project.howYouBuiltIt}</div>
             </div>
           )}
 
           {project.challengesSolutionsTips && (
             <div>
               <h2 className="text-lg font-semibold mb-2">Challenges / Solutions / Tips</h2>
-              <div className="text-gray-700 whitespace-pre-line leading-relaxed">{project.challengesSolutionsTips}</div>
+              <div className="text-gray-700 leading-relaxed" style={{ whiteSpace: 'pre-line' }}>{project.challengesSolutionsTips}</div>
             </div>
           )}
 
           {project.otherImpacts && (
             <div>
               <h2 className="text-lg font-semibold mb-2">Other Impacts</h2>
-              <div className="text-gray-700 whitespace-pre-line leading-relaxed">{project.otherImpacts}</div>
+              <div className="text-gray-700 leading-relaxed" style={{ whiteSpace: 'pre-line' }}>{project.otherImpacts}</div>
             </div>
           )}
 
