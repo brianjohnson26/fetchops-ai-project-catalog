@@ -54,8 +54,8 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
   return (
     <div className="mx-auto max-w-5xl">
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-semibold">Browse AI Projects</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-semibold text-black">Browse AI Projects</h1>
+        <p className="mt-1 text-sm text-black">
           Filter by keyword, team, owner, and tools.
         </p>
 
@@ -150,12 +150,12 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
         </div>
 
         {/* Results */}
-        <div className="mt-6 text-sm text-gray-500">Showing {count} project{count === 1 ? "" : "s"}</div>
+        <div className="mt-6 text-sm text-black">Showing {count} project{count === 1 ? "" : "s"}</div>
 
         <ul className="mt-2 space-y-6">
           {filtered.map((p) => (
             <li key={p.id} className="list-disc pl-4">
-              <h3 className="text-base font-medium text-gray-900">{p.title}</h3>
+              <h3 className="text-base font-medium text-black">{p.title}</h3>
 
               {/* ACTIONS: small purple buttons, side-by-side */}
               <div className="mt-1 flex items-center space-x-2">
@@ -174,10 +174,10 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
               </div>
 
               {p.summary ? (
-                <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-700">{p.summary}</p>
+                <p className="mt-3 max-w-3xl text-sm leading-6 text-black">{p.summary}</p>
               ) : null}
 
-              <div className="mt-3 text-sm text-gray-700">
+              <div className="mt-3 text-sm text-black">
                 {p.team ? <span className="mr-4">Team: {p.team}</span> : null}
                 {p.owner ? <span className="mr-4">Owner: {p.owner}</span> : null}
                 {p.tools.length > 0 ? (
