@@ -267,14 +267,14 @@ export default function BrowseFilters({ projects }: { projects: Project[] }) {
               <div className="flex justify-between items-start mb-1">
                 <div className="text-lg font-semibold">{p.title}</div>
                 <div className="flex gap-2">
-                  <a 
-                    href={`/projects/${p.id}`} 
+                  <a
+                    href={`/projects/${p.id}`}
                     className="px-3 py-1 bg-purple-600 text-white rounded text-sm font-medium hover:bg-purple-700 transition-colors"
                   >
                     View
                   </a>
-                  <a 
-                    href={`/projects/${p.id}/edit`} 
+                  <a
+                    href={`/projects/${p.id}/edit`}
                     className="px-3 py-1 bg-purple-600 text-white rounded text-sm font-medium hover:bg-purple-700 transition-colors"
                   >
                     Edit
@@ -291,7 +291,7 @@ export default function BrowseFilters({ projects }: { projects: Project[] }) {
               {pt.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {pt.map((t) => (
-                    <span key={t} className="text-xs px-2 py-1 border rounded-full">
+                    <span key={t} className="text-xs px-2 py-1 border rounded-full text-black">
                       {t}
                     </span>
                   ))}
