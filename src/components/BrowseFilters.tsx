@@ -54,37 +54,38 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
   return (
     <div className="mx-auto max-w-5xl">
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-semibold text-black">Browse AI Projects</h1>
-        <p className="mt-1 text-sm text-black">
-          Filter by keyword, team, owner, and tools.
-        </p>
-
-        <div className="mt-4">
+        {/* Header with title and export button */}
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h1 className="text-2xl font-semibold text-black">Browse AI Projects</h1>
+            <p className="mt-1 text-sm text-black">
+              Filter by keyword, team, owner, and tools.
+            </p>
+          </div>
           <a
             href="/api/projects-csv"
-            className="inline-flex items-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="inline-flex items-center rounded-md bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
             Export CSV
           </a>
         </div>
 
-        {/* Filters */}
-        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="col-span-1 md:col-span-3">
-            <label className="mb-1 block text-sm font-medium text-black">Keyword</label>
-            <div className="relative">
-              <input
-                type="text"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                placeholder="Type to search projects (real-time filtering)…"
-                className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-          </div>
+        {/* Keyword filter */}
+        <div className="mb-4">
+          <label className="mb-2 block text-sm font-medium text-black">Keyword</label>
+          <input
+            type="text"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="Type to search projects (real-time filtering)…"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
 
+        {/* Filters row */}
+        <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-black">Team</label>
+            <label className="mb-2 block text-sm font-medium text-black">Team</label>
             <select
               value={team}
               onChange={(e) => setTeam(e.target.value)}
@@ -100,7 +101,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-black">Owner</label>
+            <label className="mb-2 block text-sm font-medium text-black">Owner</label>
             <select
               value={owner}
               onChange={(e) => setOwner(e.target.value)}
@@ -115,37 +116,26 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
             </select>
           </div>
 
-          <div className="md:col-span-3">
-            <details className="rounded-md border border-gray-200 bg-gray-50 p-3">
-              <summary className="cursor-pointer select-none text-sm font-medium text-black">
-                Tools
-              </summary>
-              <div className="mt-3 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  onClick={() => setToolFilter({})}
-                  className="rounded-md bg-purple-100 px-2.5 py-1 text-xs font-medium text-purple-700 hover:bg-purple-200"
-                >
-                  Clear all
-                </button>
-                {allTools.map((t) => {
-                  const checked = !!toolFilter[t];
-                  return (
-                    <label key={t} className="flex items-center gap-2 text-sm text-black">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={(e) =>
-                          setToolFilter((prev) => ({ ...prev, [t]: e.target.checked }))
-                        }
-                        className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-                      />
-                      <span>{t}</span>
-                    </label>
-                  );
-                })}
-              </div>
-            </details>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-black">Tools</label>
+            <select
+              value={Object.keys(toolFilter).find(k => toolFilter[k]) || "__ALL__"}
+              onChange={(e) => {
+                if (e.target.value === "__ALL__") {
+                  setToolFilter({});
+                } else {
+                  setToolFilter({ [e.target.value]: true });
+                }
+              }}
+              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="__ALL__">All tools</option>
+              {allTools.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
