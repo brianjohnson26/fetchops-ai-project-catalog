@@ -14,12 +14,16 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
     items: [
       "Fetch Backend APIs",
       "FetchGPT",
+      "FOCR Dash",
       "Fraudal",
       "MC Businesses",
       "MC Catalog",
       "MC Launch Pad",
       "Orbit",
+      "PAM Dash",
       "RAD",
+      "Receipt Manager",
+      "Retailer Admin",
       "Supportal",
       "ZAF"
     ],
