@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { notifyNewProject } from "@/lib/slack"; // 🟣 NEW
 
 function isAdmin(req: NextRequest) {
   return req.cookies.get("admin_session")?.value === "1";
@@ -27,7 +28,8 @@ export async function POST(req: NextRequest) {
 
   // NEW FIELDS
   const howYouBuiltIt = String(form.get("howYouBuiltIt") || "").trim() || null;
-  const challengesSolutionsTips = String(form.get("challengesSolutionsTips") || "").trim() || null;
+  const challengesSolutionsTips =
+    String(form.get("challengesSolutionsTips") || "").trim() || null;
   const otherImpacts = String(form.get("otherImpacts") || "").trim() || null;
   const nextSteps = String(form.get("nextSteps") || "").trim() || null;
 
@@ -50,7 +52,8 @@ export async function POST(req: NextRequest) {
     if (url) links.push({ type, url });
   }
 
-  await prisma.project.create({
+  // Create the project
+  const created = await prisma.project.create({
     data: {
       title,
       description,
@@ -69,7 +72,34 @@ export async function POST(req: NextRequest) {
       },
       links: { create: links },
     },
+    select: { id: true }, // grab the id so we can re-read for Slack
   });
+
+  // Re-read minimal fields incl. tool names for Slack message
+  const forSlack = await prisma.project.findUnique({
+    where: { id: Number(created.id) },
+    select: {
+      id: true,
+      title: true,
+      team: true,
+      owner: true,
+      // your Slack helper treats summary as optional; use description if you want:
+      // summary: true, // uncomment if your schema has it
+      tools: { select: { tool: { select: { name: true } } } },
+    },
+  });
+
+  if (forSlack) {
+    await notifyNewProject({
+      id: String(forSlack.id),
+      title: forSlack.title,
+      team: forSlack.team,
+      owner: forSlack.owner,
+      // If you prefer sending description as "summary" in Slack:
+      // summary: description,
+      tools: forSlack.tools,
+    });
+  }
 
   const proto = req.headers.get("x-forwarded-proto") || "https";
   const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
