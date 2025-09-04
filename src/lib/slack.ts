@@ -6,6 +6,7 @@ export async function notifyNewProject(project: {
   owner?: string | null;
   summary?: string | null;
   tools?: { tool: { name: string } }[];
+  links?: { type: string; url: string }[];
 }) {
   const url = process.env.SLACK_WEBHOOK_URL;
   if (!url) {
@@ -21,12 +22,18 @@ export async function notifyNewProject(project: {
       ? project.tools.map((t) => t.tool.name).join(", ")
       : "—";
 
+  const linksList =
+    project.links && project.links.length
+      ? project.links.map((link) => `<${link.url}|${link.type}>`).join(" • ")
+      : "—";
+
   const textLines = [
     `*New AI project submitted!*`,
     `*Title:* ${project.title || "(Untitled)"}`,
     `*Team:* ${project.team || "—"}`,
     `*Owner:* ${project.owner || "—"}`,
     `*Tools:* ${toolList}`,
+    `*Links:* ${linksList}`,
     project.summary ? `*Summary:* ${project.summary}` : undefined,
     `<${base}/projects/${project.id}|View in Catalog>`,
   ].filter(Boolean);

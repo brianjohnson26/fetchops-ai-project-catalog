@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     select: { id: true }, // grab the id so we can re-read for Slack
   });
 
-  // Re-read minimal fields incl. tool names for Slack message
+  // Re-read minimal fields incl. tool names and links for Slack message
   const forSlack = await prisma.project.findUnique({
     where: { id: Number(created.id) },
     select: {
@@ -86,6 +86,7 @@ export async function POST(req: NextRequest) {
       // your Slack helper treats summary as optional; use description if you want:
       // summary: true, // uncomment if your schema has it
       tools: { select: { tool: { select: { name: true } } } },
+      links: { select: { type: true, url: true } },
     },
   });
 
@@ -98,6 +99,7 @@ export async function POST(req: NextRequest) {
       // If you prefer sending description as "summary" in Slack:
       // summary: description,
       tools: forSlack.tools,
+      links: forSlack.links,
     });
   }
 
