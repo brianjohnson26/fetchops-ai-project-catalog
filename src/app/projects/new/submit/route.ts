@@ -35,13 +35,10 @@ export async function POST(req: NextRequest) {
 
   // tools from checkboxes + freeform
   const selectedNames = form.getAll("toolNames").map((v) => String(v));
-  const groups = ["llms", "automation", "data", "apps", "fetch"];
-  const otherNames = groups.flatMap((g) =>
-    String(form.get(`other_${g}`) || "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-  );
+  const otherNames = String(form.get("other_tools") || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
   const allToolNames = Array.from(new Set([...selectedNames, ...otherNames]));
 
   // links (up to 3)

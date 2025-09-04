@@ -173,14 +173,17 @@ export default function NewProject() {
                   </label>
                 ))}
               </div>
-              <div className="mt-2">
-                <label>
-                  Other (freeform, comma-separated)
-                  <input name={`other_${g.key}`} placeholder="e.g., Cohere, Supabase Functions" />
-                </label>
-              </div>
             </fieldset>
           ))}
+
+          {/* Single Other field for all categories */}
+          <fieldset className="card" style={{ padding: 12 }}>
+            <legend className="text-sm" style={{ padding: "0 6px" }}>Other Tools</legend>
+            <label>
+              Other tools not listed above (comma-separated)
+              <input name="other_tools" placeholder="e.g., Cohere, Supabase Functions, Custom API" />
+            </label>
+          </fieldset>
         </div>
 
         <button className="add-cta" type="submit">Create</button>
