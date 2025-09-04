@@ -83,6 +83,13 @@ export default async function EditProject({ params }: { params: { id: string } }
 
   const current = new Set(p.tools.map(t => t.tool.name));
   const link1 = p.links[0]; const link2 = p.links[1]; const link3 = p.links[2];
+  
+  // Separate predefined tools from other tools
+  const allPredefinedTools = new Set(GROUPS.flatMap(g => g.items));
+  const otherTools = p.tools
+    .map(t => t.tool.name)
+    .filter(name => !allPredefinedTools.has(name))
+    .join(", ");
 
   return (
     <div className="grid">
@@ -201,7 +208,7 @@ export default async function EditProject({ params }: { params: { id: string } }
             <legend className="text-sm" style={{ padding: "0 6px" }}>Other Tools</legend>
             <label>
               Other tools not listed above (comma-separated)
-              <input name="other_tools" placeholder="e.g., Cohere, Supabase Functions, Custom API" />
+              <input name="other_tools" placeholder="e.g., Cohere, Supabase Functions, Custom API" defaultValue={otherTools} />
             </label>
           </fieldset>
         </div>
