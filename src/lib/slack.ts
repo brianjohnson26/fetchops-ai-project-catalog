@@ -35,7 +35,7 @@ export async function notifyNewProject(project: {
     `*Tools:* ${toolList}`,
     `*Links:* ${linksList}`,
     project.summary ? `*Summary:* ${project.summary}` : undefined,
-    `<${base}/projects/${project.id}|View in Catalog>`,
+    `<${base}/projects/${project.id}|View details in Ops AI Catalog>`,
   ].filter(Boolean);
 
   try {
