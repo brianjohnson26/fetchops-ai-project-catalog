@@ -30,10 +30,10 @@ async function getProjects(): Promise<BrowseProject[]> {
       title: r.title ?? "(Untitled)",
       // synthesize a summary for the filter/search card
       summary:
-        r.description ??
-        r.howYouBuiltIt ??
-        r.challengesSolutionsTips ??
-        r.otherImpacts ??
+        r.description ||
+        r.howYouBuiltIt ||
+        r.challengesSolutionsTips ||
+        r.otherImpacts ||
         null,
       team: r.team ?? null,
       owner: r.owner ?? null,
