@@ -199,7 +199,16 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
               </h3>
 
               {p.summary ? (
-                <div className="mt-3 max-w-3xl text-sm leading-6 text-black whitespace-pre-line">{p.summary}</div>
+                <div 
+                  className="mt-3 max-w-3xl text-sm leading-6 text-black" 
+                  style={{ 
+                    whiteSpace: 'pre-line',
+                    wordWrap: 'break-word',
+                    overflowWrap: 'break-word'
+                  }}
+                >
+                  {p.summary}
+                </div>
               ) : null}
 
               <div style={{ marginTop: '24px', fontSize: '14px', color: 'black' }}>

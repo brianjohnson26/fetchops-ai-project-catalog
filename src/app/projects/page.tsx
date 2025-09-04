@@ -28,13 +28,8 @@ async function getProjects(): Promise<BrowseProject[]> {
     return rows.map((r) => ({
       id: String(r.id),
       title: r.title ?? "(Untitled)",
-      // synthesize a summary for the filter/search card
-      summary:
-        r.description ||
-        r.howYouBuiltIt ||
-        r.challengesSolutionsTips ||
-        r.otherImpacts ||
-        null,
+      // synthesize a summary for the filter/search card - use description first to preserve line breaks
+      summary: r.description || null,
       team: r.team ?? null,
       owner: r.owner ?? null,
       tools: r.tools,
