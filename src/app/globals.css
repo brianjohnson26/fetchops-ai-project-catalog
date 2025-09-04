@@ -112,6 +112,7 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 10px;
   transition: border-color 120ms ease;
+  font-family: inherit;
 }
 
 input:focus,
