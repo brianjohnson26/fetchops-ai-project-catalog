@@ -10,10 +10,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico?v=3" type="image/png" sizes="32x32" />
-        <link rel="icon" href="/favicon.ico?v=3" type="image/x-icon" />
-        <link rel="shortcut icon" href="/favicon.ico?v=3" />
-        <link rel="apple-touch-icon" href="/favicon.ico?v=3" />
+        <link rel="icon" href="/favicon.png?v=4" type="image/png" sizes="32x32" />
+        <link rel="icon" href="/favicon.ico?v=4" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.png?v=4" />
+        <link rel="apple-touch-icon" href="/favicon.png?v=4" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="theme-color" content="#ffffff" />
       </head>
