@@ -2,27 +2,73 @@ import React from "react";
 
 /** Canonical tool groups (v1) with free-text “Other” per group */
 const GROUPS: { key: string; label: string; items: string[] }[] = [
-  { key: "llms", label: "LLMs / Chatbots", items: ["ChatGPT (OpenAI)", "Claude (Anthropic)", "Gemini (Google)", "Perplexity / Comet", "CustomGPT"] },
+  { 
+    key: "llms", 
+    label: "LLMs / Chatbots", 
+    items: ["ChatGPT (OpenAI)", "Claude (Anthropic)", "Comet (Perplexity)", "CustomGPT", "Gemini (Google)"] 
+  },
+  {
+    key: "fetch",
+    label: "Fetch Tools",
+    items: [
+      "Fetch Backend APIs",
+      "FetchGPT",
+      "Fraudal",
+      "MC Businesses",
+      "MC Catalog",
+      "MC Launch Pad",
+      "Orbit",
+      "RAD",
+      "Supportal",
+      "ZAF"
+    ],
+  },
+  { 
+    key: "apps", 
+    label: "Core 3P Platforms / Integrations", 
+    items: [
+      "Agent Assist (Forethought)",
+      "Confluence",
+      "Google Docs",
+      "Google Drive",
+      "Google Sheets",
+      "Google Slides",
+      "Jira",
+      "Kount",
+      "Scout (Forethought)",
+      "Slack",
+      "Zendesk"
+    ] 
+  },
+  { 
+    key: "data", 
+    label: "Data", 
+    items: ["Airtable", "Grafana", "Snowflake", "Supabase", "Tableau", "Unblocked"] 
+  },
   {
     key: "automation",
     label: "AI / Automation / Coding & Dev Frameworks",
     items: [
-      "Slack bots / API",
-      "Jira integrations",
-      "Google Drive integrations",
-      "Zendesk API / Macros / Automations",
-      "Internal Fetch APIs / services",
-      "n8n",
-      "Zapier / Make",
+      "ChatGPT Agent",
+      "Chrome Extension",
+      "Cursor",
+      "Express",
+      "Gamma",
+      "Github",
       "Google Apps Script",
+      "Loveable",
+      "n8n",
+      "Node.JS",
+      "NotebookLM",
+      "Open AI API",
+      "Playwright",
+      "Python",
+      "Replit",
+      "Slackbots / API",
+      "Streamlit",
+      "Zapier",
+      "Zendesk API / Macros"
     ],
-  },
-  { key: "data", label: "Data", items: ["Google Sheets", "Airtable", "Snowflake", "SQL query", "Unblocked", "NotebookLM", "Grafana", "Tableau"] },
-  { key: "apps", label: "Core 3P Platforms / Integrations", items: ["Chrome extension", "Python script", "Streamlit", "Gamma"] },
-  {
-    key: "fetch",
-    label: "Fetch Tools",
-    items: ["Supportal", "Fraudal", "Zendesk", "Kount", "Scout Chatbot", "Agent Assist", "ZAF", "Mission Control"],
   },
 ];
 
