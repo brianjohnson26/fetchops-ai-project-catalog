@@ -5,7 +5,7 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
   { key: "llms", label: "LLMs / Chatbots", items: ["ChatGPT (OpenAI)", "Claude (Anthropic)", "Gemini (Google)", "Perplexity / Comet", "CustomGPT"] },
   {
     key: "automation",
-    label: "Automation / Integrations",
+    label: "AI / Automation / Coding & Dev Frameworks",
     items: [
       "Slack bots / API",
       "Jira integrations",
@@ -17,11 +17,11 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
       "Google Apps Script",
     ],
   },
-  { key: "data", label: "Data / Productivity", items: ["Google Sheets", "Airtable", "Snowflake", "SQL query", "Unblocked", "NotebookLM", "Grafana", "Tableau"] },
-  { key: "apps", label: "Apps / Interfaces", items: ["Chrome extension", "Python script", "Streamlit", "Gamma"] },
+  { key: "data", label: "Data", items: ["Google Sheets", "Airtable", "Snowflake", "SQL query", "Unblocked", "NotebookLM", "Grafana", "Tableau"] },
+  { key: "apps", label: "Core 3P Platforms / Integrations", items: ["Chrome extension", "Python script", "Streamlit", "Gamma"] },
   {
     key: "fetch",
-    label: "Fetch / Partner Tools",
+    label: "Fetch Tools",
     items: ["Supportal", "Fraudal", "Zendesk", "Kount", "Scout Chatbot", "Agent Assist", "ZAF", "Mission Control"],
   },
 ];
