@@ -2,6 +2,7 @@ import React from "react";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import ProjectActions from "@/components/ProjectActions";
 
 export default async function ProjectPage({ params }: { params: { id: string } }) {
@@ -23,6 +24,10 @@ export default async function ProjectPage({ params }: { params: { id: string } }
     notFound();
   }
 
+  // Check if user is admin
+  const cookieStore = cookies();
+  const isAdmin = cookieStore.get("admin_session")?.value === "1";
+
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-6">
@@ -34,7 +39,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
       <div className="bg-white border rounded-2xl p-6">
         <div className="mb-4">
           <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
-          <ProjectActions projectId={project.id} />
+          {isAdmin && <ProjectActions projectId={project.id} />}
         </div>
 
         <div className="grid gap-6">
