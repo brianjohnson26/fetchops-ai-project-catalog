@@ -1,4 +1,3 @@
-
 import { getAuthSession } from "@/lib/auth";
 import { signIn, signOut } from "next-auth/react";
 
