@@ -1,4 +1,3 @@
-
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -34,34 +33,5 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: "database",
-  },
-};
-import { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "./prisma";
-
-export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-  ],
-  callbacks: {
-    async signIn({ user, account, profile }) {
-      // Only allow users with @fetchrewards.com email addresses
-      if (user.email?.endsWith("@fetchrewards.com")) {
-        return true;
-      }
-      return false;
-    },
-    async session({ session, user }) {
-      return session;
-    },
-  },
-  pages: {
-    error: "/auth/error", // Custom error page
   },
 };
