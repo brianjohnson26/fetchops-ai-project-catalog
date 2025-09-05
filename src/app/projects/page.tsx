@@ -5,39 +5,54 @@ import BrowseFilters, { type Project as BrowseProject } from "@/components/Brows
 export const dynamic = "force-dynamic";
 
 async function getProjects(): Promise<BrowseProject[]> {
-  try {
-    const rows = await prisma.project.findMany({
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        team: true,
-        owner: true,
-        howYouBuiltIt: true,
-        challengesSolutionsTips: true,
-        otherImpacts: true,
-        tools: {
-          select: {
-            tool: { select: { name: true } },
+  const maxRetries = 3;
+  let attempt = 0;
+  
+  while (attempt < maxRetries) {
+    try {
+      const rows = await prisma.project.findMany({
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          team: true,
+          owner: true,
+          howYouBuiltIt: true,
+          challengesSolutionsTips: true,
+          otherImpacts: true,
+          tools: {
+            select: {
+              tool: { select: { name: true } },
+            },
           },
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+        orderBy: { createdAt: "desc" },
+      });
 
-    return rows.map((r) => ({
-      id: String(r.id),
-      title: r.title ?? "(Untitled)",
-      // synthesize a summary for the filter/search card - use description first to preserve line breaks
-      summary: r.description || null,
-      team: r.team ?? null,
-      owner: r.owner ?? null,
-      tools: r.tools,
-    }));
-  } catch (err) {
-    console.error("Failed to load projects:", err);
-    return [];
+      return rows.map((r) => ({
+        id: String(r.id),
+        title: r.title ?? "(Untitled)",
+        // synthesize a summary for the filter/search card - use description first to preserve line breaks
+        summary: r.description || null,
+        team: r.team ?? null,
+        owner: r.owner ?? null,
+        tools: r.tools,
+      }));
+    } catch (err) {
+      attempt++;
+      console.error(`Failed to load projects (attempt ${attempt}/${maxRetries}):`, err);
+      
+      if (attempt >= maxRetries) {
+        console.error("Max retries reached, returning empty array");
+        return [];
+      }
+      
+      // Wait before retrying (exponential backoff)
+      await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+    }
   }
+  
+  return [];
 }
 
 export default async function ProjectsPage() {

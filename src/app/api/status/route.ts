@@ -29,8 +29,24 @@ export async function GET() {
       );
     }
 
-    const count = await prisma.project.count();
-    return NextResponse.json({ ok: true, db: "up", projects: count });
+    // Test connection with a timeout
+    const startTime = Date.now();
+    const count = await Promise.race([
+      prisma.project.count(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database query timeout')), 5000)
+      )
+    ]) as number;
+    
+    const queryTime = Date.now() - startTime;
+    
+    return NextResponse.json({ 
+      ok: true, 
+      db: "up", 
+      projects: count, 
+      queryTime: `${queryTime}ms`,
+      timestamp: new Date().toISOString()
+    });
   } catch (error) {
     console.error("Database connection failed:", error);
     const errorCode = error && typeof error === 'object' && 'code' in error ? error.code : 'UNKNOWN';
