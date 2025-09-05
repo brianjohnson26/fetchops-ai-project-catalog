@@ -47,12 +47,13 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
   { 
     key: "data", 
     label: "Data", 
-    items: ["Airtable", "Grafana", "Snowflake", "Supabase", "Tableau", "Unblocked"] 
+    items: ["Airtable", "Grafana", "Hex", "Snowflake", "Supabase", "Tableau", "Unblocked"] 
   },
   {
     key: "automation",
     label: "AI / Automation / Coding & Dev Frameworks",
     items: [
+      "Bitbucket",
       "ChatGPT Agent",
       "Chrome Extension",
       "Cursor",
@@ -70,6 +71,7 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
       "Replit",
       "Slackbots / API",
       "Streamlit",
+      "VS Code",
       "Zapier",
       "Zendesk API / Macros"
     ],
