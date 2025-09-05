@@ -7,22 +7,20 @@ datasource db {
   url      = env("DATABASE_URL_SUPABASE")
 }
 
-// NextAuth tables
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -54,41 +52,33 @@ model VerificationToken {
 }
 
 model Project {
-  id                      Int              @id @default(autoincrement())
+  id                      Int             @id @default(autoincrement())
   title                   String
   description             String
   team                    String
-  hoursSavedPerWeek       Int              @default(0)
-  createdAt               DateTime         @default(now())
-  updatedAt               DateTime         @updatedAt
+  hoursSavedPerWeek       Int             @default(0)
+  createdAt               DateTime        @default(now())
+  updatedAt               DateTime        @updatedAt
   howYouBuiltIt           String?
   challengesSolutionsTips String?
   otherImpacts            String?
-  nextSteps               String?
   owner                   String
-
-  // children / relations
-  links     Link[]
-  people    PersonProject[]
-  tools     ProjectTool[]
+  nextSteps               String?
+  links                   Link[]
+  people                  PersonProject[]
+  tools                   ProjectTool[]
 }
 
 model Tool {
   id       Int           @id @default(autoincrement())
   name     String        @unique
-
-  // Deleting a Tool is RESTRICT by default (intentional)
   projects ProjectTool[]
 }
 
 model ProjectTool {
   projectId Int
   toolId    Int
-
-  // Cascade delete when a Project is deleted
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-
-  // Keep Tool delete as RESTRICT to avoid nuking usage records when a tool is removed
   tool      Tool    @relation(fields: [toolId], references: [id])
 
   @@id([projectId, toolId])
@@ -98,8 +88,6 @@ model Person {
   id          Int             @id @default(autoincrement())
   name        String
   slackHandle String          @unique
-
-  // Deleting a Person is RESTRICT by default (intentional)
   projects    PersonProject[]
 }
 
@@ -107,11 +95,7 @@ model PersonProject {
   personId  Int
   projectId Int
   role      String
-
-  // Keep Person delete as RESTRICT (default)
   person    Person  @relation(fields: [personId], references: [id])
-
-  // Cascade delete when a Project is deleted
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@id([personId, projectId])
@@ -122,7 +106,5 @@ model Link {
   projectId Int
   type      String
   url       String
-
-  // Cascade delete when a Project is deleted
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
