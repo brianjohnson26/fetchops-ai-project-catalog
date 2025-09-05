@@ -1,9 +1,21 @@
 import { getAuthSession } from "@/lib/auth";
-import { signIn, signOut } from "next-auth/next";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth-config";
+import { getServerSession } from "next-auth";
 
 export default async function AdminPage() {
   const session = await getAuthSession();
   const isAdmin = session?.user?.email?.endsWith("@fetchrewards.com");
+
+  async function handleSignOut() {
+    "use server";
+    redirect("/api/auth/signout");
+  }
+
+  async function handleSignIn() {
+    "use server";
+    redirect("/api/auth/signin?callbackUrl=/admin");
+  }
 
   if (isAdmin) {
     return (
@@ -16,10 +28,7 @@ export default async function AdminPage() {
             <>Not signed in</>
           )}
         </p>
-        <form action={async () => {
-          "use server";
-          await signOut();
-        }} style={{ marginTop: 12 }}>
+        <form action={handleSignOut} style={{ marginTop: 12 }}>
           <button type="submit">Sign out</button>
         </form>
       </div>
@@ -32,10 +41,7 @@ export default async function AdminPage() {
       <p className="small">
         Sign in with your @fetchrewards.com Google account
       </p>
-      <form action={async () => {
-        "use server";
-        await signIn("google", { redirectTo: "/admin" });
-      }} style={{ marginTop: 12 }}>
+      <form action={handleSignIn} style={{ marginTop: 12 }}>
         <button type="submit">Sign in with Google</button>
       </form>
     </div>
