@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             ) : (
               <>
                 <Link href="/projects/new" className="add-cta">+ Add Project</Link>
-                <form method="POST" action="/admin/logout" style={{ marginLeft: 8 }}>
+                <form method="POST" action="/api/auth/signout" style={{ marginLeft: 8 }}>
                   <button type="submit" className="btn-link">Log out</button>
                 </form>
               </>
