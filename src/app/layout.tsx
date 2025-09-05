@@ -1,11 +1,13 @@
+
 import "./globals.css";
 import Link from "next/link";
-import { cookies } from "next/headers";
+import { getAuthSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const isAdmin = cookies().get("admin_session")?.value === "1";
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await getAuthSession();
+  const isAdmin = session?.user?.email?.endsWith("@fetchrewards.com");
 
   return (
     <html lang="en">

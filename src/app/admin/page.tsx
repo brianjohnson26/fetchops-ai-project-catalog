@@ -1,21 +1,10 @@
+
 import { getAuthSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth-config";
-import { getServerSession } from "next-auth";
+import Link from "next/link";
 
 export default async function AdminPage() {
   const session = await getAuthSession();
   const isAdmin = session?.user?.email?.endsWith("@fetchrewards.com");
-
-  async function handleSignOut() {
-    "use server";
-    redirect("/api/auth/signout");
-  }
-
-  async function handleSignIn() {
-    "use server";
-    redirect("/api/auth/signin?callbackUrl=/admin");
-  }
 
   if (isAdmin) {
     return (
@@ -28,9 +17,12 @@ export default async function AdminPage() {
             <>Not signed in</>
           )}
         </p>
-        <form action={handleSignOut} style={{ marginTop: 12 }}>
-          <button type="submit">Sign out</button>
-        </form>
+        <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
+          <Link href="/projects/new" className="button">Add Project</Link>
+          <form method="POST" action="/api/auth/signout" style={{ display: 'inline' }}>
+            <button type="submit">Sign out</button>
+          </form>
+        </div>
       </div>
     );
   }
@@ -41,9 +33,11 @@ export default async function AdminPage() {
       <p className="small">
         Sign in with your @fetchrewards.com Google account
       </p>
-      <form action={handleSignIn} style={{ marginTop: 12 }}>
-        <button type="submit">Sign in with Google</button>
-      </form>
+      <div style={{ marginTop: 12 }}>
+        <Link href="/api/auth/signin?callbackUrl=/admin" className="button">
+          Sign in with Google
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -30,6 +31,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/admin",
     error: "/admin",
+    signOut: "/",
   },
   session: {
     strategy: "database",
