@@ -1,5 +1,5 @@
 import { getAuthSession } from "@/lib/auth";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/next";
 
 export default async function AdminPage() {
   const session = await getAuthSession();
