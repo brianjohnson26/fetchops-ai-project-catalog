@@ -11,7 +11,11 @@ export default async function AdminPage() {
       <div className="card">
         <h1 className="text-xl font-semibold">Admin</h1>
         <p className="small">
-          Signed in as {session.user?.email} ({session.user?.name})
+          {session?.user ? (
+            <>Signed in as {session.user.email} ({session.user.name})</>
+          ) : (
+            <>Not signed in</>
+          )}
         </p>
         <form action={async () => {
           "use server";
