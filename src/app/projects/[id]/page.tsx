@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import ProjectActions from "@/components/ProjectActions";
+import { getAuthSession } from "@/lib/auth";
 
 export default async function ProjectPage({ params }: { params: { id: string } }) {
   const id = Number(params.id);
@@ -25,8 +26,8 @@ export default async function ProjectPage({ params }: { params: { id: string } }
   }
 
   // Check if user is admin
-  const cookieStore = cookies();
-  const isAdmin = cookieStore.get("admin_session")?.value === "1";
+  const session = await getAuthSession();
+  const isAdmin = session?.user?.email?.endsWith("@fetchrewards.com");
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">

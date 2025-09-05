@@ -1,14 +1,22 @@
-import { cookies } from "next/headers";
 
-export default function AdminPage() {
-  const isAdmin = cookies().get("admin_session")?.value === "1";
+import { getAuthSession } from "@/lib/auth";
+import { signIn, signOut } from "next-auth/react";
+
+export default async function AdminPage() {
+  const session = await getAuthSession();
+  const isAdmin = session?.user?.email?.endsWith("@fetchrewards.com");
 
   if (isAdmin) {
     return (
       <div className="card">
         <h1 className="text-xl font-semibold">Admin</h1>
-        <p className="small">You’re signed in as admin. Session lasts ~8 hours.</p>
-        <form method="POST" action="/admin/logout" style={{ marginTop: 12 }}>
+        <p className="small">
+          Signed in as {session.user?.email} ({session.user?.name})
+        </p>
+        <form action={async () => {
+          "use server";
+          await signOut({ redirectTo: "/" });
+        }} style={{ marginTop: 12 }}>
           <button type="submit">Sign out</button>
         </form>
       </div>
@@ -18,14 +26,14 @@ export default function AdminPage() {
   return (
     <div className="card">
       <h1 className="text-xl font-semibold">Admin sign-in</h1>
-      <form method="POST" action="/admin/login" style={{ marginTop: 12 }}>
-        <label>
-          Admin key
-          <input name="key" placeholder="enter admin key" required />
-        </label>
-        <div style={{ marginTop: 10 }}>
-          <button type="submit">Sign in</button>
-        </div>
+      <p className="small">
+        Sign in with your @fetchrewards.com Google account
+      </p>
+      <form action={async () => {
+        "use server";
+        await signIn("google", { redirectTo: "/admin" });
+      }} style={{ marginTop: 12 }}>
+        <button type="submit">Sign in with Google</button>
       </form>
     </div>
   );

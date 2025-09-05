@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { notifyNewProject } from "@/lib/slack"; // 🟣 NEW
 
-function isAdmin(req: NextRequest) {
-  return req.cookies.get("admin_session")?.value === "1";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth-config";
+
+async function isAdmin() {
+  const session = await getServerSession(authOptions);
+  return session?.user?.email?.endsWith("@fetchrewards.com") || false;
 }
 
 export async function POST(req: NextRequest) {
-  if (!isAdmin(req)) {
+  if (!(await isAdmin())) {
     const proto = req.headers.get("x-forwarded-proto") || "https";
     const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
     const origin = `${proto}://${host}`;
