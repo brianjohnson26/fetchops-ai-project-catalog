@@ -18,7 +18,7 @@ export default async function AdminPage() {
         </p>
         <form action={async () => {
           "use server";
-          await signOut({ redirect: "/" });
+          await signOut({ redirectTo: "/" });
         }} style={{ marginTop: 12 }}>
           <button type="submit">Sign out</button>
         </form>
