@@ -10,3 +10,17 @@ export async function requireAdmin() {
 export async function getAuthSession() {
   return await getServerSession(authOptions);
 }
+import { getServerSession } from "next-auth";
+import { authOptions } from "./auth-config";
+
+export async function getAuthSession() {
+  return await getServerSession(authOptions);
+}
+
+export async function requireAuth() {
+  const session = await getAuthSession();
+  if (!session) {
+    throw new Error("Authentication required");
+  }
+  return session;
+}
