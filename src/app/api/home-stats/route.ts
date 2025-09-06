@@ -9,10 +9,16 @@ export async function GET() {
     console.log("home-stats: Starting fresh query...");
     
     // Force fresh connection and bypass any query caching
+    await prisma.$disconnect();
+    await new Promise(resolve => setTimeout(resolve, 100)); // Small delay
     await prisma.$connect();
     
-    // Single DB query; compute stats in memory
-    const projects = await prisma.project.findMany({
+    // Execute a simple query to ensure connection is truly fresh
+    await prisma.$executeRaw`SELECT 1`;
+    
+    // Use a fresh transaction to ensure we get the latest data
+    const projects = await prisma.$transaction(async (tx) => {
+      return await tx.project.findMany({
       select: {
         id: true,
         title: true,
@@ -23,6 +29,7 @@ export async function GET() {
         tools: { select: { tool: { select: { name: true } } } },
       },
       orderBy: { createdAt: "desc" },
+    });
     });
 
     console.log(`home-stats: Found ${projects.length} projects`);

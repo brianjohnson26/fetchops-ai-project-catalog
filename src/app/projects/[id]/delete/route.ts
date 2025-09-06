@@ -39,6 +39,16 @@ export async function POST(
 
     console.log(`Successfully deleted project ${id}`);
 
+    // Force revalidation of the home page cache
+    try {
+      const { revalidatePath } = await import('next/cache');
+      revalidatePath('/');
+      revalidatePath('/projects');
+      console.log("Revalidated cache for home and projects pages");
+    } catch (error) {
+      console.log("Cache revalidation not available or failed:", error);
+    }
+
     // Redirect back to projects list
     const proto = request.headers.get("x-forwarded-proto") || "https";
     const host = request.headers.get("x-forwarded-host") || request.nextUrl.host;
