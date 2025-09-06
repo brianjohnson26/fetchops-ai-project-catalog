@@ -6,7 +6,10 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    console.log("home-stats: Starting query...");
+    console.log("home-stats: Starting fresh query...");
+    
+    // Force fresh connection and bypass any query caching
+    await prisma.$connect();
     
     // Single DB query; compute stats in memory
     const projects = await prisma.project.findMany({
@@ -15,6 +18,7 @@ export async function GET() {
         title: true,
         team: true,
         createdAt: true,
+        updatedAt: true,
         hoursSavedPerWeek: true,
         tools: { select: { tool: { select: { name: true } } } },
       },
@@ -53,12 +57,15 @@ export async function GET() {
       totalHours,
       mostCommonTools,
       latest,
+      timestamp: Date.now(), // Add timestamp to ensure fresh data
     });
     
-    // Add strong cache-busting headers
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    // Add strongest possible cache-busting headers
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0');
     response.headers.set('Pragma', 'no-cache');
     response.headers.set('Expires', '0');
+    response.headers.set('Surrogate-Control', 'no-store');
+    response.headers.set('Vary', '*');
     response.headers.set('ETag', `"${Date.now()}"`);
     
     return response;

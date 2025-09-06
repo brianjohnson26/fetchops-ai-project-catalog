@@ -15,7 +15,15 @@ type Stats = {
 
 async function getStats(): Promise<Stats> {
   const base = process.env.NEXTAUTH_URL || "";
-  const res = await fetch(`${base}/api/home-stats`, { cache: "no-store" });
+  // Add timestamp to prevent any caching issues
+  const timestamp = Date.now();
+  const res = await fetch(`${base}/api/home-stats?t=${timestamp}`, { 
+    cache: "no-store",
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache'
+    }
+  });
   if (!res.ok) {
     throw new Error(`home-stats failed: ${res.status}`);
   }
