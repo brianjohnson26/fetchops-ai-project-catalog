@@ -2,12 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { notifyNewProject } from "@/lib/slack"; // 🟣 NEW
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth-config";
+import { requireAdmin } from "@/lib/auth";
 
 async function isAdmin() {
-  const session = await getServerSession(authOptions);
-  return session?.user?.email?.endsWith("@fetchrewards.com") || false;
+  return await requireAdmin();
 }
 
 export async function POST(req: NextRequest) {
