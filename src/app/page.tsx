@@ -2,6 +2,7 @@ import "server-only";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 
 type ToolCount = { name: string; count: number };
 type LatestProject = { id: number; title: string; team: string; createdAt?: string };
@@ -13,29 +14,60 @@ type Stats = {
   latest: LatestProject[];
 };
 
+import { prisma } from "@/lib/prisma";
+
 async function getStats(): Promise<Stats> {
-  const base = process.env.NEXTAUTH_URL || "";
-  // Add timestamp and random to prevent any caching issues
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(7);
-  const res = await fetch(`${base}/api/home-stats?t=${timestamp}&r=${random}`, { 
-    cache: "no-store",
-    headers: {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'If-None-Match': '*'
-    }
+  console.log("Dashboard: Getting fresh stats directly from database...");
+  
+  // Force fresh database connection
+  await prisma.$disconnect();
+  await new Promise(resolve => setTimeout(resolve, 100));
+  await prisma.$connect();
+  
+  // Get fresh data directly from database
+  const projects = await prisma.project.findMany({
+    select: {
+      id: true,
+      title: true,
+      team: true,
+      createdAt: true,
+      hoursSavedPerWeek: true,
+      tools: { select: { tool: { select: { name: true } } } },
+    },
+    orderBy: { createdAt: "desc" },
   });
-  if (!res.ok) {
-    throw new Error(`home-stats failed: ${res.status}`);
+
+  console.log(`Dashboard: Found ${projects.length} projects directly from DB`);
+  console.log("Dashboard: Latest 3 projects:", projects.slice(0, 3).map(p => ({ id: p.id, title: p.title })));
+
+  const projectCount = projects.length;
+  const totalHours = projects.reduce((sum, p) => sum + (p.hoursSavedPerWeek ?? 0), 0) || 0;
+
+  const toolCounts = new Map<string, number>();
+  for (const p of projects) {
+    for (const t of p.tools) {
+      const name = t.tool?.name ?? "(Unknown)";
+      toolCounts.set(name, (toolCounts.get(name) ?? 0) + 1);
+    }
   }
-  const data = await res.json();
+  const mostCommonTools = [...toolCounts.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .filter((t) => t.count > 0)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
+  const latest = projects.slice(0, 5).map(p => ({
+    id: p.id, 
+    title: p.title, 
+    team: p.team, 
+    createdAt: p.createdAt?.toISOString(),
+  }));
 
   return {
-    projectCount: data.projectCount ?? 0,
-    totalHours: data.totalHours ?? 0,
-    mostCommonTools: (data.mostCommonTools ?? []) as ToolCount[],
-    latest: (data.latest ?? []) as LatestProject[],
+    projectCount,
+    totalHours,
+    mostCommonTools,
+    latest,
   };
 }
 
