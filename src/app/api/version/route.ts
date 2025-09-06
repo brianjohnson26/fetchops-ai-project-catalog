@@ -5,5 +5,6 @@ export async function GET() {
     app: 'fetch-ai-project-catalog',
     env: process.env.NODE_ENV,
     time: new Date().toISOString(),
+    version: "1.1.0"
   });
 }
