@@ -102,6 +102,17 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  // Force revalidation of cache after creating a project
+  try {
+    const { revalidatePath } = await import('next/cache');
+    revalidatePath('/');
+    revalidatePath('/projects');
+    revalidatePath('/api/home-stats');
+    console.log("Revalidated cache for home, projects, and home-stats after project creation");
+  } catch (error) {
+    console.log("Cache revalidation not available or failed:", error);
+  }
+
   const proto = req.headers.get("x-forwarded-proto") || "https";
   const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
   const origin = `${proto}://${host}`;

@@ -10,14 +10,17 @@ export async function GET() {
     
     // Force fresh connection and bypass any query caching
     await prisma.$disconnect();
-    await new Promise(resolve => setTimeout(resolve, 100)); // Small delay
+    await new Promise(resolve => setTimeout(resolve, 200)); // Longer delay
     await prisma.$connect();
     
-    // Execute a simple query to ensure connection is truly fresh
+    // Execute multiple queries to ensure connection is truly fresh
     await prisma.$executeRaw`SELECT 1`;
+    await prisma.$executeRaw`SELECT COUNT(*) FROM "Project"`;
     
-    // Use a fresh transaction to ensure we get the latest data
+    // Use READ UNCOMMITTED isolation to get the absolute latest data
     const projects = await prisma.$transaction(async (tx) => {
+      // Force the transaction to see uncommitted data
+      await tx.$executeRaw`SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED`;
       return await tx.project.findMany({
       select: {
         id: true,

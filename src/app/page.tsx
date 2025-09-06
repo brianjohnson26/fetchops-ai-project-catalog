@@ -15,13 +15,15 @@ type Stats = {
 
 async function getStats(): Promise<Stats> {
   const base = process.env.NEXTAUTH_URL || "";
-  // Add timestamp to prevent any caching issues
+  // Add timestamp and random to prevent any caching issues
   const timestamp = Date.now();
-  const res = await fetch(`${base}/api/home-stats?t=${timestamp}`, { 
+  const random = Math.random().toString(36).substring(7);
+  const res = await fetch(`${base}/api/home-stats?t=${timestamp}&r=${random}`, { 
     cache: "no-store",
     headers: {
       'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache'
+      'Pragma': 'no-cache',
+      'If-None-Match': '*'
     }
   });
   if (!res.ok) {
