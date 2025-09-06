@@ -17,11 +17,8 @@ export async function GET() {
     await prisma.$executeRaw`SELECT 1`;
     await prisma.$executeRaw`SELECT COUNT(*) FROM "Project"`;
     
-    // Use READ UNCOMMITTED isolation to get the absolute latest data
-    const projects = await prisma.$transaction(async (tx) => {
-      // Force the transaction to see uncommitted data
-      await tx.$executeRaw`SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED`;
-      return await tx.project.findMany({
+    // Get the latest data with a fresh query
+    const projects = await prisma.project.findMany({
       select: {
         id: true,
         title: true,
@@ -32,7 +29,6 @@ export async function GET() {
         tools: { select: { tool: { select: { name: true } } } },
       },
       orderBy: { createdAt: "desc" },
-    });
     });
 
     console.log(`home-stats: Found ${projects.length} projects`);
