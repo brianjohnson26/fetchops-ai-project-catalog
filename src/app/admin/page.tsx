@@ -34,9 +34,10 @@ export default async function AdminPage() {
         Sign in with your @fetchrewards.com Google account
       </p>
       <div style={{ marginTop: 12 }}>
-        <Link href="/api/auth/signin?callbackUrl=/admin" className="button">
-          Sign in with Google
-        </Link>
+        <form method="post" action="/api/auth/signin/google" style={{ display: "inline" }}>
+          <input type="hidden" name="callbackUrl" value="/admin" />
+          <button type="submit" className="button">Sign in with Google</button>
+        </form>
       </div>
     </div>
   );

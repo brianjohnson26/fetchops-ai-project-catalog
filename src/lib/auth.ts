@@ -1,19 +1,27 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "./auth-config";
+// src/lib/auth.ts
+import { getServerSession, type NextAuthOptions } from "next-auth";
+import Google from "next-auth/providers/google";
 
-export async function requireAdmin() {
-  const session = await getServerSession(authOptions);
-  return session?.user?.email?.endsWith("@fetchrewards.com") || false;
+export const authOptions: NextAuthOptions = {
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+  ],
+};
+
+export function getAuthSession() {
+  return getServerSession(authOptions);
 }
 
-export async function getAuthSession() {
-  return await getServerSession(authOptions);
+export async function requireAdmin() {
+  const session = await getAuthSession();
+  return !!session?.user?.email?.endsWith("@fetchrewards.com");
 }
 
 export async function requireAuth() {
   const session = await getAuthSession();
-  if (!session) {
-    throw new Error("Authentication required");
-  }
+  if (!session) throw new Error("Authentication required");
   return session;
 }

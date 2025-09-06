@@ -1,40 +1,41 @@
-import { prisma } from "@/lib/prisma";
+import "server-only";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
-async function getStats() {
-  const [projectCount, toolCounts, totalHours] = await Promise.all([
-    prisma.project.count(),
-    prisma.tool.findMany({ include: { projects: true } }),
-    prisma.project.aggregate({ _sum: { hoursSavedPerWeek: true } }),
-  ]);
-  const mostCommonTools = toolCounts
-    .map((t) => ({ name: t.name, count: t.projects.length }))
-    .filter((t) => t.count > 0)
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5);
+type ToolCount = { name: string; count: number };
+type LatestProject = { id: number; title: string; team: string; createdAt?: string };
+
+type Stats = {
+  projectCount: number;
+  totalHours: number;
+  mostCommonTools: ToolCount[];
+  latest: LatestProject[];
+};
+
+async function getStats(): Promise<Stats> {
+  const base = process.env.NEXTAUTH_URL || "";
+  const res = await fetch(`${base}/api/home-stats`, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`home-stats failed: ${res.status}`);
+  }
+  const data = await res.json();
+
   return {
-    projectCount,
-    totalHours: totalHours._sum.hoursSavedPerWeek ?? 0,
-    mostCommonTools,
-    latest: await prisma.project.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
+    projectCount: data.projectCount ?? 0,
+    totalHours: data.totalHours ?? 0,
+    mostCommonTools: (data.mostCommonTools ?? []) as ToolCount[],
+    latest: (data.latest ?? []) as LatestProject[],
   };
 }
 
 export default async function Dashboard() {
-  let s; // Declare s here
-
+  let s: Stats;
   try {
     s = await getStats();
   } catch (error) {
     console.error("Failed to fetch stats:", error);
-    // Provide fallback data in case of an error
-    s = {
-      projectCount: 0,
-      totalHours: 0,
-      mostCommonTools: [],
-      latest: [],
-    };
+    s = { projectCount: 0, totalHours: 0, mostCommonTools: [], latest: [] };
   }
 
   return (
@@ -60,11 +61,15 @@ export default async function Dashboard() {
         <div className="card">
           <div className="text-sm text-gray-500">Top tools</div>
           <ul className="mt-1">
-            {s.mostCommonTools.map((t) => (
-              <li key={t.name}>
-                {t.name} — {t.count}
-              </li>
-            ))}
+            {s.mostCommonTools.length === 0 ? (
+              <li className="text-gray-500">No tools yet</li>
+            ) : (
+              s.mostCommonTools.map((t) => (
+                <li key={t.name}>
+                  {t.name} — {t.count}
+                </li>
+              ))
+            )}
           </ul>
         </div>
       </div>
