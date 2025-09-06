@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
+    console.log("home-stats: Starting query...");
+    
     // Single DB query; compute stats in memory
     const projects = await prisma.project.findMany({
       select: {
@@ -18,6 +20,9 @@ export async function GET() {
       },
       orderBy: { createdAt: "desc" },
     });
+
+    console.log(`home-stats: Found ${projects.length} projects`);
+    console.log("home-stats: Latest 3 projects:", projects.slice(0, 3).map(p => ({ id: p.id, title: p.title })));
 
     const projectCount = projects.length;
     const totalHours =
@@ -40,13 +45,23 @@ export async function GET() {
       id: p.id, title: p.title, team: p.team, createdAt: p.createdAt,
     }));
 
-    return NextResponse.json({
+    console.log("home-stats: Returning latest projects:", latest.map(p => ({ id: p.id, title: p.title })));
+
+    const response = NextResponse.json({
       ok: true,
       projectCount,
       totalHours,
       mostCommonTools,
       latest,
     });
+    
+    // Add strong cache-busting headers
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    response.headers.set('ETag', `"${Date.now()}"`);
+    
+    return response;
   } catch (e: any) {
     return NextResponse.json({ ok: false, error: String(e) }, { status: 500 });
   }
