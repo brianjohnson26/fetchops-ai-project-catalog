@@ -86,7 +86,7 @@ export default function NewProject() {
       <form method="POST" action="/projects/new/submit" className="card grid" style={{ gridTemplateColumns: "1fr" }}>
         {/* Admin & basics */}
         <label>Title<input name="title" placeholder="e.g., Automatic Ticket Triage" required /></label>
-        <label>Description<textarea name="description" rows={5} placeholder="What it does, who uses it, benefits" required /></label>
+        <label>Description<textarea name="description" rows={5} placeholder="What it does, who uses it, benefits (max 300 characters)" maxLength={300} required /></label>
 
         {/* NEW FIELDS */}
         <label>
