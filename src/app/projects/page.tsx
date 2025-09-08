@@ -61,9 +61,9 @@ export default async function ProjectsPage() {
 
   // Extract unique teams, owners, tools for filters - include predefined teams
   const predefinedTeams = ["Fraud", "Implementation", "Ops Data", "Receipt Quality", "Support"];
-  const projectTeams = Array.from(new Set(projects.map(p => p.team).filter(Boolean)));
+  const projectTeams = Array.from(new Set(projects.map(p => p.team).filter(Boolean))) as string[];
   const allTeams = Array.from(new Set([...predefinedTeams, ...projectTeams])).sort();
-  const allOwners = Array.from(new Set(projects.map(p => p.owner).filter(Boolean)));
+  const allOwners = Array.from(new Set(projects.map(p => p.owner).filter(Boolean))) as string[];
   const allTools = Array.from(new Set(projects.flatMap(p => p.tools.map(t => t.tool.name))));
 
   return (
