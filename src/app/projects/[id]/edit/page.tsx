@@ -1,5 +1,7 @@
 import React from "react";
 import { prisma } from "@/lib/prisma";
+import { getAuthSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
 const GROUPS: { key: string; label: string; items: string[] }[] = [
