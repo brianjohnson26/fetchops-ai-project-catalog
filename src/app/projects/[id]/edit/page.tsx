@@ -1,8 +1,26 @@
 import React from "react";
 import { prisma } from "@/lib/prisma";
 import { getAuthSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
+
+async function getProject(id: number) {
+  return await prisma.project.findUnique({
+    where: { id },
+    include: {
+      tools: { include: { tool: true } },
+      links: true,
+    },
+  });
+}
+
+async function getAllToolNames(): Promise<string[]> {
+  const tools = await prisma.tool.findMany({
+    select: { name: true },
+    orderBy: { name: "asc" },
+  });
+  return tools.map(t => t.name);
+}
 
 const GROUPS: { key: string; label: string; items: string[] }[] = [
   {
@@ -154,7 +172,7 @@ export default async function EditProjectPage({
             />
           </label>
 
-          <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={p.hoursSavedPerWeek} /></label>
+          <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={project.hoursSavedPerWeek} /></label>
 
           <label>
             Deployment Date
@@ -204,7 +222,7 @@ export default async function EditProjectPage({
           <fieldset className="card" style={{ padding: 12 }}>
             <legend className="text-sm" style={{ padding: "0 6px" }}>Links</legend>
             {[1, 2, 3].map((i) => {
-              const L = i === 1 ? link1 : i === 2 ? link2 : link3;
+              const L = project.links[i - 1] || null;
               return (
                 <div key={i} className="grid" style={{ gridTemplateColumns: "200px 1fr", gap: 12, alignItems: "end", marginTop: i === 1 ? 0 : 8 }}>
                   <label>
@@ -233,11 +251,14 @@ export default async function EditProjectPage({
               <fieldset key={g.key} className="card" style={{ padding: 12 }}>
                 <legend className="text-sm" style={{ padding: "0 6px" }}>{g.label}</legend>
                 <div className="grid" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-                  {g.items.map((name) => (
-                    <label key={name} className="flex items-center gap-2">
-                      <input type="checkbox" name="toolNames" value={name} defaultChecked={current.has(name)} /> {name}
-                    </label>
-                  ))}
+                  {g.items.map((name) => {
+                    const isChecked = project.tools.some(pt => pt.tool.name === name);
+                    return (
+                      <label key={name} className="flex items-center gap-2">
+                        <input type="checkbox" name="toolNames" value={name} defaultChecked={isChecked} /> {name}
+                      </label>
+                    );
+                  })}
                 </div>
               </fieldset>
             ))}
@@ -247,7 +268,12 @@ export default async function EditProjectPage({
               <legend className="text-sm" style={{ padding: "0 6px" }}>Other Tools</legend>
               <label>
                 Other tools not listed above (comma-separated)
-                <input name="other_tools" placeholder="e.g., Cohere, Supabase Functions, Custom API" defaultValue={otherTools} />
+                <input name="other_tools" placeholder="e.g., Cohere, Supabase Functions, Custom API" defaultValue={
+                  project.tools
+                    .map(pt => pt.tool.name)
+                    .filter(name => !GROUPS.some(g => g.items.includes(name)))
+                    .join(", ")
+                } />
               </label>
             </fieldset>
           </div>
