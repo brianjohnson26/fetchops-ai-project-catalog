@@ -110,6 +110,15 @@ export default function NewProject() {
         <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={0} /></label>
 
         <label>
+          Deployment Date
+          <input 
+            type="date" 
+            name="deploymentDate"
+            placeholder="When was this project deployed/launched?"
+          />
+        </label>
+
+        <label>
           Other Qualitative or Quantitative Impacts
           <textarea
             name="otherImpacts"

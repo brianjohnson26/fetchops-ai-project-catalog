@@ -10,6 +10,7 @@ export type Project = {
   summary?: string | null;
   team?: string | null;
   owner?: string | null;
+  deploymentDate?: string | null;
   tools: { tool: { name: string } }[];
 };
 
@@ -25,6 +26,8 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
   const [team, setTeam] = useState<string>("__ALL__");
   const [owner, setOwner] = useState<string>("__ALL__");
   const [toolFilter, setToolFilter] = useState<Record<string, boolean>>({});
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
   const filtered = useMemo(() => {
     const kw = keyword.trim().toLowerCase();
@@ -40,6 +43,14 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
         if (!hasAny) return false;
       }
 
+      // date range filter
+      if (dateFrom || dateTo) {
+        if (!p.deploymentDate) return false; // exclude projects without deployment date
+        const deploymentDate = new Date(p.deploymentDate);
+        if (dateFrom && deploymentDate < new Date(dateFrom)) return false;
+        if (dateTo && deploymentDate > new Date(dateTo)) return false;
+      }
+
       if (!kw) return true;
       const hay =
         `${p.title ?? ""} ${p.summary ?? ""} ${p.team ?? ""} ${p.owner ?? ""} ${p.tools
@@ -47,7 +58,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
           .join(" ")}`.toLowerCase();
       return hay.includes(kw);
     });
-  }, [projects, keyword, team, owner, toolFilter]);
+  }, [projects, keyword, team, owner, toolFilter, dateFrom, dateTo]);
 
   const count = filtered.length;
 
@@ -152,6 +163,45 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
           </div>
         </div>
 
+        {/* Date range filters */}
+        <div style={{ display: 'flex', gap: '24px', marginBottom: '24px' }}>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'black' }}>Deployment Date From</label>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #d1d5db',
+                borderRadius: '6px',
+                backgroundColor: 'white',
+                fontSize: '14px'
+              }}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'black' }}>Deployment Date To</label>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #d1d5db',
+                borderRadius: '6px',
+                backgroundColor: 'white',
+                fontSize: '14px'
+              }}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            {/* Empty div for alignment */}
+          </div>
+        </div>
+
         {/* Results with Export CSV button */}
         <div style={{ 
           marginTop: '24px', 
@@ -214,6 +264,11 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
               <div style={{ marginTop: '24px', fontSize: '14px', color: 'black' }}>
                 {p.team ? <div style={{ marginBottom: '4px' }}>Team: {p.team}</div> : null}
                 {p.owner ? <div style={{ marginBottom: '4px' }}>Owner: {p.owner}</div> : null}
+                {p.deploymentDate ? (
+                  <div style={{ marginBottom: '4px' }}>
+                    Deployed: {new Date(p.deploymentDate).toLocaleDateString()}
+                  </div>
+                ) : null}
                 {p.tools.length > 0 ? (
                   <div>
                     Tools: {p.tools.map((t) => t.tool.name).join(" · ")}

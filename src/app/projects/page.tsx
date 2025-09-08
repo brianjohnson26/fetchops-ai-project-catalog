@@ -17,6 +17,7 @@ async function getProjects(): Promise<BrowseProject[]> {
           description: true,
           team: true,
           owner: true,
+          deploymentDate: true,
           howYouBuiltIt: true,
           challengesSolutionsTips: true,
           otherImpacts: true,
@@ -36,6 +37,7 @@ async function getProjects(): Promise<BrowseProject[]> {
         summary: r.description || null,
         team: r.team ?? null,
         owner: r.owner ?? null,
+        deploymentDate: r.deploymentDate?.toISOString() || null,
         tools: r.tools,
       }));
     } catch (err) {

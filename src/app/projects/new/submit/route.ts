@@ -28,6 +28,10 @@ export async function POST(req: NextRequest) {
       .replace(/^@+/, "");
   const hoursSavedPerWeek = Number(form.get("hoursSavedPerWeek") || 0);
 
+  // Parse deployment date
+  const deploymentDateStr = String(form.get("deploymentDate") || "").trim();
+  const deploymentDate = deploymentDateStr ? new Date(deploymentDateStr) : undefined;
+
   // NEW FIELDS
   const howYouBuiltIt = String(form.get("howYouBuiltIt") || "").trim() || null;
   const challengesSolutionsTips =
@@ -59,6 +63,7 @@ export async function POST(req: NextRequest) {
       team,
       owner, // stored as the owner name
       hoursSavedPerWeek,
+      deploymentDate, // Add deployment date here
       // include new fields in the DB record
       howYouBuiltIt,
       challengesSolutionsTips,

@@ -64,6 +64,7 @@ model Project {
   otherImpacts            String?
   owner                   String
   nextSteps               String?
+  deploymentDate          DateTime?
   links                   Link[]
   people                  PersonProject[]
   tools                   ProjectTool[]
