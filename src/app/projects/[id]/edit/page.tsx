@@ -134,6 +134,15 @@ export default async function EditProject({ params }: { params: { id: string } }
         <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={p.hoursSavedPerWeek} /></label>
 
         <label>
+          Deployment Date
+          <input 
+            type="date" 
+            name="deploymentDate"
+            defaultValue={p.deploymentDate ? new Date(p.deploymentDate).toISOString().split('T')[0] : ""}
+          />
+        </label>
+
+        <label>
           Other Qualitative or Quantitative Impacts
           <textarea
             name="otherImpacts"
