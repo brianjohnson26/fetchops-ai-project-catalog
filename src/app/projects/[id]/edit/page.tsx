@@ -84,6 +84,21 @@ export default async function EditProject({ params }: { params: { id: string } }
   const p = await prisma.project.findUnique({
     where: { id },
     include: { tools: { include: { tool: true } }, links: true },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      team: true,
+      owner: true,
+      hoursSavedPerWeek: true,
+      howYouBuiltIt: true,
+      challengesSolutionsTips: true,
+      otherImpacts: true,
+      nextSteps: true,
+      deploymentDate: true,
+      tools: { include: { tool: true } },
+      links: true,
+    },
   });
   if (!p) return <div className="card">Not found. <Link className="text-blue-700" href="/projects">← Back</Link></div>;
 
