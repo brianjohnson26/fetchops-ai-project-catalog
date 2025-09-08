@@ -1,41 +1,36 @@
-
 import { getAuthSession } from "@/lib/auth";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default async function AdminPage() {
+export const dynamic = "force-dynamic";
+
+type PageProps = {
+  searchParams?: { callbackUrl?: string };
+};
+
+export default async function AdminPage({ searchParams }: PageProps) {
   const session = await getAuthSession();
-  const isAdmin = session?.user?.email?.endsWith("@fetchrewards.com");
+  const isAdmin = !!session?.user?.email?.endsWith("@fetchrewards.com");
 
+  // Only allow same-site, relative callback targets.
+  const raw = searchParams?.callbackUrl ?? "/";
+  const callbackSafe =
+    typeof raw === "string" && raw.startsWith("/") ? raw : "/";
+
+  // ✅ Already signed in? Go straight to the intended page (Dashboard by default).
   if (isAdmin) {
-    return (
-      <div className="card">
-        <h1 className="text-xl font-semibold">Admin</h1>
-        <p className="small">
-          {session?.user ? (
-            <>Signed in as {session.user.email} ({session.user.name})</>
-          ) : (
-            <>Not signed in</>
-          )}
-        </p>
-        <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
-          <Link href="/projects/new" className="button">Add Project</Link>
-          <form method="POST" action="/api/auth/signout" style={{ display: 'inline' }}>
-            <button type="submit">Sign out</button>
-          </form>
-        </div>
-      </div>
-    );
+    redirect(callbackSafe);
   }
 
+  // Not signed in yet → show Google sign-in.
   return (
     <div className="card">
       <h1 className="text-xl font-semibold">Admin sign-in</h1>
-      <p className="small">
-        Sign in with your @fetchrewards.com Google account
-      </p>
+      <p className="small">Sign in with your @fetchrewards.com Google account</p>
+
       <div style={{ marginTop: 12 }}>
+        {/* POST so NextAuth handles the callbackUrl on the server */}
         <form method="post" action="/api/auth/signin/google" style={{ display: "inline" }}>
-          <input type="hidden" name="callbackUrl" value="/admin" />
+          <input type="hidden" name="callbackUrl" value={callbackSafe} />
           <button type="submit" className="button">Sign in with Google</button>
         </form>
       </div>
