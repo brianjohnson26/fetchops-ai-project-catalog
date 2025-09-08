@@ -169,6 +169,7 @@ export default async function EditProject({ params }: { params: { id: string } }
             <option value="">Select a team</option>
             <option value="Fraud">Fraud</option>
             <option value="Implementation">Implementation</option>
+            <option value="Ops Data">Ops Data</option>
             <option value="Receipt Quality">Receipt Quality</option>
             <option value="Support">Support</option>
           </select>
