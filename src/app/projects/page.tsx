@@ -7,12 +7,12 @@ export const dynamic = "force-dynamic";
 async function getProjects(): Promise<BrowseProject[]> {
   try {
     console.log("Projects page: Starting to fetch projects...");
-    
+
     // Force fresh database connection
     await prisma.$disconnect();
     await new Promise(resolve => setTimeout(resolve, 100));
     await prisma.$connect();
-    
+
     const rows = await prisma.project.findMany({
       select: {
         id: true,
@@ -59,9 +59,11 @@ async function getProjects(): Promise<BrowseProject[]> {
 export default async function ProjectsPage() {
   const projects = await getProjects();
 
-  // Extract unique values for filters
-  const allTeams = Array.from(new Set(projects.map(p => p.team).filter(Boolean))) as string[];
-  const allOwners = Array.from(new Set(projects.map(p => p.owner).filter(Boolean))) as string[];
+  // Extract unique teams, owners, tools for filters - include predefined teams
+  const predefinedTeams = ["Fraud", "Implementation", "Ops Data", "Receipt Quality", "Support"];
+  const projectTeams = Array.from(new Set(projects.map(p => p.team).filter(Boolean)));
+  const allTeams = Array.from(new Set([...predefinedTeams, ...projectTeams])).sort();
+  const allOwners = Array.from(new Set(projects.map(p => p.owner).filter(Boolean)));
   const allTools = Array.from(new Set(projects.flatMap(p => p.tools.map(t => t.tool.name))));
 
   return (
