@@ -9,12 +9,16 @@ async function isAdmin() {
 }
 
 export async function POST(req: NextRequest) {
-  if (!(await isAdmin())) {
-    const proto = req.headers.get("x-forwarded-proto") || "https";
-    const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
-    const origin = `${proto}://${host}`;
-    return NextResponse.redirect(new URL("/admin?err=signin", origin), 303);
-  }
+  try {
+    console.log("New project submission started");
+    
+    if (!(await isAdmin())) {
+      console.log("User not authenticated as admin");
+      const proto = req.headers.get("x-forwarded-proto") || "https";
+      const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
+      const origin = `${proto}://${host}`;
+      return NextResponse.redirect(new URL("/admin?err=signin", origin), 303);
+    }
 
   const form = await req.formData();
 
@@ -56,6 +60,8 @@ export async function POST(req: NextRequest) {
   }
 
   // Create the project
+  console.log("Creating project with data:", { title, description, team, owner, deploymentDate });
+  
   const created = await prisma.project.create({
     data: {
       title,
@@ -78,6 +84,8 @@ export async function POST(req: NextRequest) {
     },
     select: { id: true }, // grab the id so we can re-read for Slack
   });
+  
+  console.log("Project created successfully with ID:", created.id);
 
   // Re-read minimal fields incl. tool names and links for Slack message
   const forSlack = await prisma.project.findUnique({
@@ -119,7 +127,15 @@ export async function POST(req: NextRequest) {
   }
 
   const proto = req.headers.get("x-forwarded-proto") || "https";
-  const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
-  const origin = `${proto}://${host}`;
-  return NextResponse.redirect(new URL("/projects?ok=1", origin), 303);
+    const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
+    const origin = `${proto}://${host}`;
+    console.log("Redirecting to projects page with success");
+    return NextResponse.redirect(new URL("/projects?ok=1", origin), 303);
+  } catch (error) {
+    console.error("Error creating project:", error);
+    const proto = req.headers.get("x-forwarded-proto") || "https";
+    const host = req.headers.get("x-forwarded-host") || req.nextUrl.host;
+    const origin = `${proto}://${host}`;
+    return NextResponse.redirect(new URL("/projects/new?error=1", origin), 303);
+  }
 }

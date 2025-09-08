@@ -5,56 +5,55 @@ import BrowseFilters, { type Project as BrowseProject } from "@/components/Brows
 export const dynamic = "force-dynamic";
 
 async function getProjects(): Promise<BrowseProject[]> {
-  const maxRetries = 3;
-  let attempt = 0;
-  
-  while (attempt < maxRetries) {
-    try {
-      const rows = await prisma.project.findMany({
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          team: true,
-          owner: true,
-          deploymentDate: true,
-          howYouBuiltIt: true,
-          challengesSolutionsTips: true,
-          otherImpacts: true,
-          tools: {
-            select: {
-              tool: { select: { name: true } },
-            },
+  try {
+    console.log("Projects page: Starting to fetch projects...");
+    
+    // Force fresh database connection
+    await prisma.$disconnect();
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await prisma.$connect();
+    
+    const rows = await prisma.project.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        team: true,
+        owner: true,
+        deploymentDate: true,
+        howYouBuiltIt: true,
+        challengesSolutionsTips: true,
+        otherImpacts: true,
+        tools: {
+          select: {
+            tool: { select: { name: true } },
           },
         },
-        orderBy: { createdAt: "desc" },
-      });
+      },
+      orderBy: { createdAt: "desc" },
+    });
 
-      return rows.map((r) => ({
-        id: String(r.id),
-        title: r.title ?? "(Untitled)",
-        // synthesize a summary for the filter/search card - use description first to preserve line breaks
-        summary: r.description || null,
-        team: r.team ?? null,
-        owner: r.owner ?? null,
-        deploymentDate: r.deploymentDate?.toISOString() || null,
-        tools: r.tools,
-      }));
-    } catch (err) {
-      attempt++;
-      console.error(`Failed to load projects (attempt ${attempt}/${maxRetries}):`, err);
-      
-      if (attempt >= maxRetries) {
-        console.error("Max retries reached, returning empty array");
-        return [];
-      }
-      
-      // Wait before retrying (exponential backoff)
-      await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+    console.log(`Projects page: Found ${rows.length} projects`);
+    if (rows.length > 0) {
+      console.log("Projects page: First project:", { id: rows[0].id, title: rows[0].title });
     }
+
+    const result = rows.map((r) => ({
+      id: String(r.id),
+      title: r.title ?? "(Untitled)",
+      summary: r.description || null,
+      team: r.team ?? null,
+      owner: r.owner ?? null,
+      deploymentDate: r.deploymentDate?.toISOString() || null,
+      tools: r.tools,
+    }));
+
+    console.log(`Projects page: Returning ${result.length} projects`);
+    return result;
+  } catch (err) {
+    console.error("Projects page: Error fetching projects:", err);
+    return [];
   }
-  
-  return [];
 }
 
 export default async function ProjectsPage() {
