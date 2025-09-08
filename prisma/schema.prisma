@@ -54,7 +54,7 @@ model VerificationToken {
 model Project {
   id                      Int             @id @default(autoincrement())
   title                   String
-  description             String
+  description             String          @db.VarChar(300) // ⬅️ Limit to 300 chars
   team                    String
   hoursSavedPerWeek       Int             @default(0)
   createdAt               DateTime        @default(now())
