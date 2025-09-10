@@ -6,7 +6,14 @@ const asStr = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v
 export default async function Experts({ searchParams }: { searchParams?: SP }) {
   const toolName = asStr(searchParams?.tool);
 
-  const tools = await prisma.tool.findMany({ orderBy: { name: "asc" } });
+  const tools = await prisma.tool.findMany({
+    where: {
+      projects: {
+        some: {} // Only include tools that have at least one project
+      }
+    },
+    orderBy: { name: "asc" }
+  });
 
   let results: { owner: string; count: number }[] = [];
   if (toolName) {
