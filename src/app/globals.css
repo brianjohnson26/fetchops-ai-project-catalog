@@ -283,6 +283,12 @@ main {
     grid-template-columns: 1fr;
   }
 
+  /* Stack stats grid on mobile */
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
   /* Improve button spacing on mobile */
   .btn-linklike {
     padding: 8px 12px;
@@ -320,6 +326,13 @@ main {
   .card {
     padding: 8px;
   }
+}
+
+/* Stats grid layout */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.5fr;
+  gap: 16px;
 }
 
 /* Fix checkbox alignment on grouped picklists */

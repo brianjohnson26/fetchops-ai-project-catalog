@@ -95,7 +95,7 @@ export default async function Dashboard() {
       </div>
 
       {/* Top stats */}
-      <div className="grid" style={{ gridTemplateColumns: "1fr 1fr 1fr 1.5fr" }}>
+      <div className="stats-grid">
         <div className="card">
           <div className="text-sm text-gray-500">Total projects</div>
           <div className="text-3xl font-semibold">{s.projectCount}</div>
