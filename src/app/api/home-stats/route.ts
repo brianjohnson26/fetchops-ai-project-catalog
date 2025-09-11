@@ -37,6 +37,7 @@ export async function GET() {
     const projectCount = projects.length;
     const totalHours =
       projects.reduce((sum, p) => sum + (p.hoursSavedPerWeek ?? 0), 0) || 0;
+    const distinctOwners = new Set(projects.map(p => p.owner).filter(Boolean)).size;
 
     const toolCounts = new Map<string, number>();
     for (const p of projects) {
@@ -61,6 +62,7 @@ export async function GET() {
       ok: true,
       projectCount,
       totalHours,
+      distinctOwners,
       mostCommonTools,
       latest,
       timestamp: Date.now(), // Add timestamp to ensure fresh data

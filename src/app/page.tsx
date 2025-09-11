@@ -10,6 +10,7 @@ type LatestProject = { id: number; title: string; team: string; createdAt?: stri
 type Stats = {
   projectCount: number;
   totalHours: number;
+  distinctOwners: number;
   mostCommonTools: ToolCount[];
   latest: LatestProject[];
 };
@@ -42,6 +43,7 @@ async function getStats(): Promise<Stats> {
 
   const projectCount = projects.length;
   const totalHours = projects.reduce((sum, p) => sum + (p.hoursSavedPerWeek ?? 0), 0) || 0;
+  const distinctOwners = new Set(projects.map(p => p.owner).filter(Boolean)).size;
 
   const toolCounts = new Map<string, number>();
   for (const p of projects) {
@@ -66,6 +68,7 @@ async function getStats(): Promise<Stats> {
   return {
     projectCount,
     totalHours,
+    distinctOwners,
     mostCommonTools,
     latest,
   };
@@ -77,7 +80,7 @@ export default async function Dashboard() {
     s = await getStats();
   } catch (error) {
     console.error("Failed to fetch stats:", error);
-    s = { projectCount: 0, totalHours: 0, mostCommonTools: [], latest: [] };
+    s = { projectCount: 0, totalHours: 0, distinctOwners: 0, mostCommonTools: [], latest: [] };
   }
 
   return (
@@ -91,7 +94,7 @@ export default async function Dashboard() {
       </div>
 
       {/* Top stats */}
-      <div className="grid" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+      <div className="grid" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
         <div className="card">
           <div className="text-sm text-gray-500">Total projects</div>
           <div className="text-3xl font-semibold">{s.projectCount}</div>
@@ -99,6 +102,10 @@ export default async function Dashboard() {
         <div className="card">
           <div className="text-sm text-gray-500">Weekly hours saved</div>
           <div className="text-3xl font-semibold">{s.totalHours}</div>
+        </div>
+        <div className="card">
+          <div className="text-sm text-gray-500">Distinct owners</div>
+          <div className="text-3xl font-semibold">{s.distinctOwners}</div>
         </div>
         <div className="card">
           <div className="text-sm text-gray-500">Top tools</div>
