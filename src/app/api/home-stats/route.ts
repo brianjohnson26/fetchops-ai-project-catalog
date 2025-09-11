@@ -23,6 +23,7 @@ export async function GET() {
         id: true,
         title: true,
         team: true,
+        owner: true,
         createdAt: true,
         updatedAt: true,
         hoursSavedPerWeek: true,

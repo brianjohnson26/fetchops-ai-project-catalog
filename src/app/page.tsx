@@ -31,6 +31,7 @@ async function getStats(): Promise<Stats> {
       id: true,
       title: true,
       team: true,
+      owner: true,
       createdAt: true,
       hoursSavedPerWeek: true,
       tools: { select: { tool: { select: { name: true } } } },
@@ -104,7 +105,7 @@ export default async function Dashboard() {
           <div className="text-3xl font-semibold">{s.totalHours}</div>
         </div>
         <div className="card">
-          <div className="text-sm text-gray-500">Distinct owners</div>
+          <div className="text-sm text-gray-500">Project Owners</div>
           <div className="text-3xl font-semibold">{s.distinctOwners}</div>
         </div>
         <div className="card">
