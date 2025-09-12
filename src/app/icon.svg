@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <style>
+    .light-f { fill: #300d38; }
+    .light-ai { fill: #f59e0b; }
+    .dark-f { fill: #9d4edd; }
+    .dark-ai { fill: #fbbf24; }
+    @media (prefers-color-scheme: dark) {
+      .light-f, .light-ai { display: none; }
+    }
+    @media (prefers-color-scheme: light) {
+      .dark-f, .dark-ai { display: none; }
+    }
+  </style>
+  <!-- Light mode -->
+  <text class="light-f" x="10" y="90" font-family="Arial, sans-serif" font-size="70" font-weight="bold">f</text>
+  <text class="light-ai" x="50" y="90" font-family="Arial, sans-serif" font-size="70" font-weight="bold">A</text>
+  <text class="light-ai" x="90" y="90" font-family="Arial, sans-serif" font-size="70" font-weight="bold">I</text>
+  <!-- Dark mode -->
+  <text class="dark-f" x="10" y="90" font-family="Arial, sans-serif" font-size="70" font-weight="bold">f</text>
+  <text class="dark-ai" x="50" y="90" font-family="Arial, sans-serif" font-size="70" font-weight="bold">A</text>
+  <text class="dark-ai" x="90" y="90" font-family="Arial, sans-serif" font-size="70" font-weight="bold">I</text>
+</svg>
