@@ -88,7 +88,7 @@ export default async function Dashboard() {
     <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
       {/* Brand hero */}
       <div className="card hero-card" style={{ padding: 20 }}>
-        <h1 style={{ fontSize: "2rem", margin: 0 }}>Fetch Operations AI Project Catalog</h1>
+        <h1 style={{ fontSize: "2rem", margin: 0 }}>Fetch AI Project Catalog</h1>
         <div className="small" style={{ marginTop: 6 }}>
           Internal catalog of implemented AI projects, owners, tools, and impact
         </div>
