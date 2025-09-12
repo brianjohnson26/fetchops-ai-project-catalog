@@ -13,9 +13,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="/favicon.ico?v=11" type="image/x-icon" />
-        <link rel="shortcut icon" href="/favicon.ico?v=11" />
-        <link rel="apple-touch-icon" href="/favicon.ico?v=11" />
+        <link rel="icon" href="/favicon.ico?v=12" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico?v=12" />
+        <link rel="apple-touch-icon" href="/favicon.ico?v=12" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="theme-color" content="#ffffff" />
       </head>
