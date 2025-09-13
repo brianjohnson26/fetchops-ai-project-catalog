@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { TEAMS } from "@/lib/constants";
 
 /** Canonical tool groups (v1) with free-text "Other" per group */
 const GROUPS: { key: string; label: string; items: string[] }[] = [
@@ -78,23 +79,6 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
       'Zendesk API / Macros',
     ],
   },
-];
-
-/** Canonical team list for the dropdown */
-const TEAMS = [
-  "AIM",
-  "B2B",
-  "BX",
-  "Expanded Core",
-  "Fraud",
-  "GTM",
-  "Implementation",
-  "Ops Data",
-  "Performance / UA",
-  "Receipt Quality",
-  "Sales",
-  "Stratops",
-  "Support",
 ];
 
 const DESC_MAX = 300;
