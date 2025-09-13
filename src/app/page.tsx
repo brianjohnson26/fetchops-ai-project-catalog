@@ -168,7 +168,7 @@ export default async function Dashboard() {
           {s.teamCounts.map((tc) => (
             <div key={tc.team} className="flex items-center justify-between border p-2 rounded">
               <span>{tc.team}</span>
-              <span className="font-semibold">{tc.count}</span>
+              <span className="font-semibold">- {tc.count}</span>
             </div>
           ))}
         </div>
