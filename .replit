@@ -17,16 +17,12 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 5556
-externalPort = 3001
-
-[[ports]]
-localPort = 38109
-externalPort = 3002
-
-[[ports]]
 localPort = 44177
 externalPort = 3003
+
+[[ports]]
+localPort = 45453
+externalPort = 3000
 
 [workflows]
 runButton = "Project"
@@ -45,27 +41,6 @@ task = "shell.exec"
 args = "npm run start"
 
 [[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Next.js Server"
-
-[[workflows.workflow]]
-name = "Next.js Server"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "webview"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "next dev -H 0.0.0.0 -p 5000"
-waitForPort = 5000
-
-[[workflows.workflow]]
 name = "Dev Server"
 author = 46799544
 mode = "sequential"
@@ -73,6 +48,27 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "next dev -H 0.0.0.0 -p 5000"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "App Server"
+
+[[workflows.workflow]]
+name = "App Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "next dev -H 0.0.0.0 -p 5000"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
 
 [agent]
 expertMode = true
