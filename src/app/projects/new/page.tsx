@@ -181,7 +181,7 @@ export default function NewProject() {
         </label>
 
         <label>
-          Owner
+          Owner (single person only)
           <input name="owner" placeholder="Full name" required />
         </label>
 
@@ -243,8 +243,8 @@ export default function NewProject() {
           <fieldset className="card" style={{ padding: 12 }}>
             <legend className="text-sm" style={{ padding: '0 6px' }}>Other Tools</legend>
             <label>
-              Other tools not listed above (please enter one tool name, not a list)
-              <input name="other_tools" placeholder="e.g., Cohere" />
+              Other tools not listed above (comma-separated)
+              <input name="other_tools" placeholder="e.g., Cohere, Supabase Functions, Custom API" />
             </label>
           </fieldset>
         </div>
