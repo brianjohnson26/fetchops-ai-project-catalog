@@ -80,6 +80,23 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
   },
 ];
 
+/** Canonical team list for the dropdown */
+const TEAMS = [
+  "AIM",
+  "B2B",
+  "BX",
+  "Expanded Core",
+  "Fraud",
+  "GTM",
+  "Implementation",
+  "Ops Data",
+  "Performance / UA",
+  "Receipt Quality",
+  "Sales",
+  "Stratops",
+  "Support",
+];
+
 const DESC_MAX = 300;
 
 export default function NewProject() {
@@ -173,11 +190,9 @@ export default function NewProject() {
           Team
           <select name="team" required>
             <option value="">Select a team</option>
-            <option value="Fraud">Fraud</option>
-            <option value="Implementation">Implementation</option>
-            <option value="Ops Data">Ops Data</option>
-            <option value="Receipt Quality">Receipt Quality</option>
-            <option value="Support">Support</option>
+            {TEAMS.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
           </select>
         </label>
 
