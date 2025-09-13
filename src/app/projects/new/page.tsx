@@ -243,8 +243,8 @@ export default function NewProject() {
           <fieldset className="card" style={{ padding: 12 }}>
             <legend className="text-sm" style={{ padding: '0 6px' }}>Other Tools</legend>
             <label>
-              Other tools not listed above (comma-separated)
-              <input name="other_tools" placeholder="e.g., Cohere, Supabase Functions, Custom API" />
+              Other tools not listed above (please enter one tool name, not a list)
+              <input name="other_tools" placeholder="e.g., Cohere" />
             </label>
           </fieldset>
         </div>
