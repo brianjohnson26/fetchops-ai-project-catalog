@@ -163,7 +163,7 @@ export default async function Dashboard() {
         <h2 className="text-lg font-semibold">Projects by Team</h2>
         <div
           className="grid mt-2"
-          style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 12 }}
+          style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 2 }}
         >
           {s.teamCounts.map((tc) => (
             <div key={tc.team} className="flex items-center justify-between border p-2 rounded">
