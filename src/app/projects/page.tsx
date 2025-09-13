@@ -64,3 +64,14 @@ export default async function ProjectsPage() {
   const projectTeams = Array.from(new Set(projects.map((p) => p.team).filter(Boolean))) as string[];
   const allTeams = Array.from(new Set([...TEAMS, ...projectTeams])).sort();
   const allOwners = Array.from(new Set(projects.map((p) => p.owner).filter(Boolean))) as string[];
+  const allTools = Array.from(new Set(projects.flatMap((p) => p.tools.map((t) => t.tool.name)))).sort();
+
+  return (
+    <BrowseFilters 
+      projects={projects}
+      allTeams={allTeams}
+      allOwners={allOwners}
+      allTools={allTools}
+    />
+  );
+}
