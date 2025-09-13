@@ -90,6 +90,12 @@ export default function NewProject() {
   return (
     <div className="grid">
       <h1 className="text-xl font-semibold">Add Project</h1>
+      
+      <div className="card" style={{ backgroundColor: '#f8f9fa', border: '1px solid #e9ecef', padding: '16px', marginBottom: '16px' }}>
+        <p className="text-sm" style={{ margin: 0, lineHeight: '1.5' }}>
+          <strong>Note:</strong> The catalog is intended for AI and automation projects that have been successfully implemented and have ongoing impact across our teams. While we love all AI innovation, please refrain from entering experiments, one-off projects, or projects that only impact a single individual's personal workload.
+        </p>
+      </div>
 
       <form
         method="POST"
