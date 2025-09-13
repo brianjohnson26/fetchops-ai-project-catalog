@@ -1,8 +1,10 @@
+// src/app/projects/[id]/edit/page.tsx
 import React from "react";
 import { prisma } from "@/lib/prisma";
 import { getAuthSession } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
+import { TEAMS } from "@/lib/constants";
 
 async function getProject(id: number) {
   return await prisma.project.findUnique({
@@ -19,14 +21,14 @@ async function getAllToolNames(): Promise<string[]> {
     select: { name: true },
     orderBy: { name: "asc" },
   });
-  return tools.map(t => t.name);
+  return tools.map((t) => t.name);
 }
 
 const GROUPS: { key: string; label: string; items: string[] }[] = [
   {
     key: "llms",
     label: "LLMs / Chatbots",
-    items: ["ChatGPT (OpenAI)", "Claude (Anthropic)", "Comet (Perplexity)", "CustomGPT", "Gemini (Google)"]
+    items: ["ChatGPT (OpenAI)", "Claude (Anthropic)", "Comet (Perplexity)", "CustomGPT", "Gemini (Google)"],
   },
   {
     key: "fetch",
@@ -45,7 +47,7 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
       "Receipt Manager",
       "Retailer Admin",
       "Supportal",
-      "ZAF"
+      "ZAF",
     ],
   },
   {
@@ -62,13 +64,13 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
       "Kount",
       "Scout (Forethought)",
       "Slack",
-      "Zendesk"
-    ]
+      "Zendesk",
+    ],
   },
   {
     key: "data",
     label: "Data",
-    items: ["Airtable", "Grafana", "Hex", "Snowflake", "Supabase", "Tableau", "Unblocked"]
+    items: ["Airtable", "Grafana", "Hex", "Snowflake", "Supabase", "Tableau", "Unblocked"],
   },
   {
     key: "automation",
@@ -94,7 +96,7 @@ const GROUPS: { key: string; label: string; items: string[] }[] = [
       "Streamlit",
       "VS Code",
       "Zapier",
-      "Zendesk API / Macros"
+      "Zendesk API / Macros",
     ],
   },
 ];
@@ -127,29 +129,22 @@ export default async function EditProjectPage({
 
   return (
     <div>
-      {searchParams?.ok && (
-        <div className="card success">Project updated successfully!</div>
-      )}
-      {searchParams?.error && (
-        <div className="card error">Failed to update project. Please try again.</div>
-      )}
+      {searchParams?.ok && <div className="card success">Project updated successfully!</div>}
+      {searchParams?.error && <div className="card error">Failed to update project. Please try again.</div>}
 
       <div className="card">
         <h1>Edit Project</h1>
         <form action={`/projects/${project.id}/edit/submit`} method="post">
           <div className="form-group">
             <label htmlFor="title">Title *</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              defaultValue={project.title}
-              required
-            />
+            <input type="text" id="title" name="title" defaultValue={project.title} required />
           </div>
 
           {/* Admin & basics */}
-          <label>Description<textarea name="description" rows={5} defaultValue={project.description} required /></label>
+          <label>
+            Description
+            <textarea name="description" rows={5} defaultValue={project.description} required />
+          </label>
 
           {/* NEW FIELDS */}
           <label>
@@ -172,14 +167,19 @@ export default async function EditProjectPage({
             />
           </label>
 
-          <label>Hours Saved / Week<input type="number" name="hoursSavedPerWeek" min={0} defaultValue={project.hoursSavedPerWeek} /></label>
+          <label>
+            Hours Saved / Week
+            <input type="number" name="hoursSavedPerWeek" min={0} defaultValue={project.hoursSavedPerWeek} />
+          </label>
 
           <label>
             Deployment Date
             <input
               type="date"
               name="deploymentDate"
-              defaultValue={project.deploymentDate ? new Date(project.deploymentDate).toISOString().split('T')[0] : ""}
+              defaultValue={
+                project.deploymentDate ? new Date(project.deploymentDate).toISOString().split("T")[0] : ""
+              }
             />
           </label>
 
@@ -203,28 +203,37 @@ export default async function EditProjectPage({
             />
           </label>
 
-          {/* Team picklist */}
+          {/* Team picklist (now sourced from TEAMS) */}
           <label>
             Team
             <select name="team" defaultValue={project.team} required>
               <option value="">Select a team</option>
-              <option value="Fraud">Fraud</option>
-              <option value="Implementation">Implementation</option>
-              <option value="Ops Data">Ops Data</option>
-              <option value="Receipt Quality">Receipt Quality</option>
-              <option value="Support">Support</option>
+              {TEAMS.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
             </select>
           </label>
 
-          <label>Owner<input name="owner" defaultValue={project.owner} required /></label>
+          <label>
+            Owner
+            <input name="owner" defaultValue={project.owner} required />
+          </label>
 
           {/* Links (prefill up to 3) */}
           <fieldset className="card" style={{ padding: 12 }}>
-            <legend className="text-sm" style={{ padding: "0 6px" }}>Links</legend>
+            <legend className="text-sm" style={{ padding: "0 6px" }}>
+              Links
+            </legend>
             {[1, 2, 3].map((i) => {
               const L = project.links[i - 1] || null;
               return (
-                <div key={i} className="grid" style={{ gridTemplateColumns: "200px 1fr", gap: 12, alignItems: "end", marginTop: i === 1 ? 0 : 8 }}>
+                <div
+                  key={i}
+                  className="grid"
+                  style={{ gridTemplateColumns: "200px 1fr", gap: 12, alignItems: "end", marginTop: i === 1 ? 0 : 8 }}
+                >
                   <label>
                     Type
                     <select name={`link_type_${i}`} defaultValue={L?.type || "Tool/Homepage"}>
@@ -252,7 +261,7 @@ export default async function EditProjectPage({
                 <legend className="text-sm" style={{ padding: "0 6px" }}>{g.label}</legend>
                 <div className="grid" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
                   {g.items.map((name) => {
-                    const isChecked = project.tools.some(pt => pt.tool.name === name);
+                    const isChecked = project.tools.some((pt) => pt.tool.name === name);
                     return (
                       <label key={name} className="flex items-center gap-2">
                         <input type="checkbox" name="toolNames" value={name} defaultChecked={isChecked} /> {name}
@@ -268,19 +277,19 @@ export default async function EditProjectPage({
               <legend className="text-sm" style={{ padding: "0 6px" }}>Other Tools</legend>
               <label>
                 Other tools not listed above (comma-separated)
-                <input name="other_tools" placeholder="e.g., Cohere, Supabase Functions, Custom API" defaultValue={
-                  project.tools
-                    .map(pt => pt.tool.name)
-                    .filter(name => !GROUPS.some(g => g.items.includes(name)))
-                    .join(", ")
-                } />
+                <input
+                  name="other_tools"
+                  placeholder="e.g., Cohere, Supabase Functions, Custom API"
+                  defaultValue={project.tools
+                    .map((pt) => pt.tool.name)
+                    .filter((name) => !GROUPS.some((g) => g.items.includes(name)))
+                    .join(", ")}
+                />
               </label>
             </fieldset>
           </div>
 
-          <button type="submit" className="button">
-            Update Project
-          </button>
+          <button type="submit" className="button">Update Project</button>
         </form>
       </div>
     </div>
