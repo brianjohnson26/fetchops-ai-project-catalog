@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { TEAMS } from "@/lib/constants";
 
 export type Project = {
   id: string;
@@ -16,7 +17,7 @@ export type Project = {
 
 type Props = {
   projects: Project[];
-  allTeams: string[];
+  allTeams: string[];  // kept for backward-compat; we merge with TEAMS
   allOwners: string[];
   allTools: string[];
 };
@@ -28,6 +29,20 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
   const [toolFilter, setToolFilter] = useState<Record<string, boolean>>({});
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+
+  // Ensure teams are always in sync with the canonical TEAMS list.
+  const teamOptions = useMemo(() => {
+    return Array.from(new Set<string>([...TEAMS, ...allTeams])).sort((a, b) => a.localeCompare(b));
+  }, [allTeams]);
+
+  // Defensive sorting for owners/tools (in case upstream isn't sorted)
+  const ownerOptions = useMemo(() => {
+    return Array.from(new Set(allOwners)).sort((a, b) => a.localeCompare(b));
+  }, [allOwners]);
+
+  const toolOptions = useMemo(() => {
+    return Array.from(new Set(allTools)).sort((a, b) => a.localeCompare(b));
+  }, [allTools]);
 
   const filtered = useMemo(() => {
     const kw = keyword.trim().toLowerCase();
@@ -69,7 +84,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
         <div className="mb-6">
           <h1 className="text-3xl font-semibold text-black">Browse AI Projects</h1>
           <p className="mt-2 text-gray-600">
-            Filter by keyword, team, owner, and tools.
+            Filter by keyword, team, owner, tools, and deployment date.
           </p>
         </div>
 
@@ -102,7 +117,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
               }}
             >
               <option value="__ALL__">All teams</option>
-              {allTeams.map((t) => (
+              {teamOptions.map((t) => (
                 <option key={t} value={t}>
                   {t}
                 </option>
@@ -125,7 +140,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
               }}
             >
               <option value="__ALL__">All owners</option>
-              {allOwners.map((o) => (
+              {ownerOptions.map((o) => (
                 <option key={o} value={o}>
                   {o}
                 </option>
@@ -136,7 +151,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
           <div style={{ flex: 1 }}>
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'black' }}>Tools</label>
             <select
-              value={Object.keys(toolFilter).find(k => toolFilter[k]) || "__ALL__"}
+              value={Object.keys(toolFilter).find((k) => toolFilter[k]) || "__ALL__"}
               onChange={(e) => {
                 if (e.target.value === "__ALL__") {
                   setToolFilter({});
@@ -154,7 +169,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
               }}
             >
               <option value="__ALL__">All tools</option>
-              {allTools.map((t) => (
+              {toolOptions.map((t) => (
                 <option key={t} value={t}>
                   {t}
                 </option>
@@ -198,7 +213,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
             />
           </div>
           <div style={{ flex: 1 }}>
-            {/* Empty div for alignment */}
+            {/* spacer for alignment */}
           </div>
         </div>
 
