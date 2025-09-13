@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import "server-only";
 
 export const dynamic = "force-dynamic";
@@ -6,6 +7,7 @@ export const revalidate = 0;
 
 type ToolCount = { name: string; count: number };
 type LatestProject = { id: number; title: string; team: string; createdAt?: string };
+type TeamCount = { team: string; count: number };
 
 type Stats = {
   projectCount: number;
@@ -13,18 +15,20 @@ type Stats = {
   distinctOwners: number;
   mostCommonTools: ToolCount[];
   latest: LatestProject[];
+  teamCounts: TeamCount[];
 };
 
 import { prisma } from "@/lib/prisma";
+import { TEAMS } from "@/lib/constants";
 
 async function getStats(): Promise<Stats> {
   console.log("Dashboard: Getting fresh stats directly from database...");
-  
+
   // Force fresh database connection
   await prisma.$disconnect();
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise((resolve) => setTimeout(resolve, 100));
   await prisma.$connect();
-  
+
   // Get fresh data directly from database
   const projects = await prisma.project.findMany({
     select: {
@@ -40,12 +44,17 @@ async function getStats(): Promise<Stats> {
   });
 
   console.log(`Dashboard: Found ${projects.length} projects directly from DB`);
-  console.log("Dashboard: Latest 3 projects:", projects.slice(0, 3).map(p => ({ id: p.id, title: p.title })));
+  console.log(
+    "Dashboard: Latest 3 projects:",
+    projects.slice(0, 3).map((p) => ({ id: p.id, title: p.title }))
+  );
 
   const projectCount = projects.length;
-  const totalHours = projects.reduce((sum, p) => sum + (p.hoursSavedPerWeek ?? 0), 0) || 0;
-  const distinctOwners = new Set(projects.map(p => p.owner).filter(Boolean)).size;
+  const totalHours =
+    projects.reduce((sum, p) => sum + (p.hoursSavedPerWeek ?? 0), 0) || 0;
+  const distinctOwners = new Set(projects.map((p) => p.owner).filter(Boolean)).size;
 
+  // Tool counts (top 5)
   const toolCounts = new Map<string, number>();
   for (const p of projects) {
     for (const t of p.tools) {
@@ -59,12 +68,29 @@ async function getStats(): Promise<Stats> {
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
-  const latest = projects.slice(0, 5).map(p => ({
-    id: p.id, 
-    title: p.title, 
-    team: p.team, 
+  // Latest projects (top 5)
+  const latest = projects.slice(0, 5).map((p) => ({
+    id: p.id,
+    title: p.title,
+    team: p.team,
     createdAt: p.createdAt?.toISOString(),
   }));
+
+  // Projects by Team — make sure every TEAMS entry shows up (even zero)
+  const rawTeamCounts = new Map<string, number>();
+  for (const p of projects) {
+    const key = p.team ?? "";
+    if (!key) continue;
+    rawTeamCounts.set(key, (rawTeamCounts.get(key) ?? 0) + 1);
+  }
+
+  // Include any teams that might exist in data but aren't in TEAMS (just in case)
+  const dataOnlyTeams = [...rawTeamCounts.keys()].filter((t) => !TEAMS.includes(t as any)).sort();
+
+  const teamCounts: TeamCount[] = [
+    ...TEAMS.map((t) => ({ team: t, count: rawTeamCounts.get(t) ?? 0 })),
+    ...dataOnlyTeams.map((t) => ({ team: t, count: rawTeamCounts.get(t) ?? 0 })),
+  ];
 
   return {
     projectCount,
@@ -72,6 +98,7 @@ async function getStats(): Promise<Stats> {
     distinctOwners,
     mostCommonTools,
     latest,
+    teamCounts,
   };
 }
 
@@ -81,7 +108,14 @@ export default async function Dashboard() {
     s = await getStats();
   } catch (error) {
     console.error("Failed to fetch stats:", error);
-    s = { projectCount: 0, totalHours: 0, distinctOwners: 0, mostCommonTools: [], latest: [] };
+    s = {
+      projectCount: 0,
+      totalHours: 0,
+      distinctOwners: 0,
+      mostCommonTools: [],
+      latest: [],
+      teamCounts: [],
+    };
   }
 
   return (
@@ -121,6 +155,22 @@ export default async function Dashboard() {
               ))
             )}
           </ul>
+        </div>
+      </div>
+
+      {/* Projects by Team */}
+      <div className="card">
+        <h2 className="text-lg font-semibold">Projects by Team</h2>
+        <div
+          className="grid mt-2"
+          style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 12 }}
+        >
+          {s.teamCounts.map((tc) => (
+            <div key={tc.team} className="flex items-center justify-between border p-2 rounded">
+              <span>{tc.team}</span>
+              <span className="font-semibold">{tc.count}</span>
+            </div>
+          ))}
         </div>
       </div>
 

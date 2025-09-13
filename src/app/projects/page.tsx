@@ -1,6 +1,7 @@
 // src/app/projects/page.tsx
 import { prisma } from "@/lib/prisma";
 import BrowseFilters, { type Project as BrowseProject } from "@/components/BrowseFilters";
+import { TEAMS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +11,7 @@ async function getProjects(): Promise<BrowseProject[]> {
 
     // Force fresh database connection
     await prisma.$disconnect();
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     await prisma.$connect();
 
     const rows = await prisma.project.findMany({
@@ -59,19 +60,7 @@ async function getProjects(): Promise<BrowseProject[]> {
 export default async function ProjectsPage() {
   const projects = await getProjects();
 
-  // Extract unique teams, owners, tools for filters - include predefined teams
-  const predefinedTeams = ["Fraud", "Implementation", "Ops Data", "Receipt Quality", "Support"];
-  const projectTeams = Array.from(new Set(projects.map(p => p.team).filter(Boolean))) as string[];
-  const allTeams = Array.from(new Set([...predefinedTeams, ...projectTeams])).sort();
-  const allOwners = Array.from(new Set(projects.map(p => p.owner).filter(Boolean))) as string[];
-  const allTools = Array.from(new Set(projects.flatMap(p => p.tools.map(t => t.tool.name))));
-
-  return (
-    <BrowseFilters 
-      projects={projects} 
-      allTeams={allTeams}
-      allOwners={allOwners}
-      allTools={allTools}
-    />
-  );
-}
+  // Build filter sources
+  const projectTeams = Array.from(new Set(projects.map((p) => p.team).filter(Boolean))) as string[];
+  const allTeams = Array.from(new Set([...TEAMS, ...projectTeams])).sort();
+  const allOwners = Array.from(new Set(projects.map((p) => p.owner).filter(Boolean))) as string[];
