@@ -131,19 +131,19 @@ export default async function Dashboard() {
       {/* Top stats */}
       <div className="stats-grid">
         <div className="card">
-          <div className="text-sm text-gray-500">Total projects</div>
+          <div className="text-lg font-semibold">Total projects</div>
           <div className="text-3xl font-semibold">{s.projectCount}</div>
         </div>
         <div className="card">
-          <div className="text-sm text-gray-500">Weekly hours saved</div>
+          <div className="text-lg font-semibold">Weekly hours saved</div>
           <div className="text-3xl font-semibold">{s.totalHours}</div>
         </div>
         <div className="card">
-          <div className="text-sm text-gray-500">Project Owners</div>
+          <div className="text-lg font-semibold">Project Owners</div>
           <div className="text-3xl font-semibold">{s.distinctOwners}</div>
         </div>
         <div className="card">
-          <div className="text-sm text-gray-500">Top tools</div>
+          <div className="text-lg font-semibold">Top tools</div>
           <ul className="mt-1">
             {s.mostCommonTools.length === 0 ? (
               <li className="text-gray-500">No tools yet</li>
