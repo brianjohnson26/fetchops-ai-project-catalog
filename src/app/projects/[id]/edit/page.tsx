@@ -140,6 +140,24 @@ export default async function EditProjectPage({
             <input type="text" id="title" name="title" defaultValue={project.title} required />
           </div>
 
+          {/* Team picklist (now sourced from TEAMS) */}
+          <label>
+            Team
+            <select name="team" defaultValue={project.team} required>
+              <option value="">Select a team</option>
+              {TEAMS.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            Owner
+            <input name="owner" defaultValue={project.owner} required />
+          </label>
+
           {/* Admin & basics */}
           <label>
             Description
@@ -211,24 +229,6 @@ export default async function EditProjectPage({
               placeholder="Additional owners, project inspiration, or any other notes you'd like to add"
               defaultValue={project.otherNotes || ""}
             />
-          </label>
-
-          {/* Team picklist (now sourced from TEAMS) */}
-          <label>
-            Team
-            <select name="team" defaultValue={project.team} required>
-              <option value="">Select a team</option>
-              {TEAMS.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            Owner
-            <input name="owner" defaultValue={project.owner} required />
           </label>
 
           {/* Links (prefill up to 3) */}
