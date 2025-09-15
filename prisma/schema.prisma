@@ -65,6 +65,7 @@ model Project {
   owner                   String
   nextSteps               String?
   deploymentDate          DateTime?
+  otherNotes              String?
   links                   Link[]
   people                  PersonProject[]
   tools                   ProjectTool[]

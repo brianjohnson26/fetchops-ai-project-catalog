@@ -175,6 +175,15 @@ export default function NewProject() {
           />
         </label>
 
+        <label>
+          Other Notes
+          <textarea
+            name="otherNotes"
+            rows={4}
+            placeholder="Additional owners, project inspiration, or any other notes you'd like to add"
+          />
+        </label>
+
         {/* Team as picklist */}
         <label>
           Team

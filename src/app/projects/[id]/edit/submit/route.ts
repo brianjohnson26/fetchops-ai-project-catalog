@@ -84,6 +84,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const challengesSolutionsTips = (String(form.get("challengesSolutionsTips") || "").trim() || null);
   const otherImpacts = (String(form.get("otherImpacts") || "").trim() || null);
   const nextSteps = (String(form.get("nextSteps") || "").trim() || null);
+  const otherNotes = (String(form.get("otherNotes") || "").trim() || null);
 
   // Tools from checkboxes + freeform
   const selectedNames = form.getAll("toolNames").map((v) => String(v).trim()).filter(Boolean);
@@ -115,6 +116,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       challengesSolutionsTips,
       otherImpacts,
       nextSteps,
+      otherNotes,
       tools: {
         deleteMany: {},
         create: allToolNames.map((name) => ({

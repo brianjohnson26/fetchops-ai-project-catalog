@@ -203,6 +203,16 @@ export default async function EditProjectPage({
             />
           </label>
 
+          <label>
+            Other Notes
+            <textarea
+              name="otherNotes"
+              rows={4}
+              placeholder="Additional owners, project inspiration, or any other notes you'd like to add"
+              defaultValue={project.otherNotes || ""}
+            />
+          </label>
+
           {/* Team picklist (now sourced from TEAMS) */}
           <label>
             Team

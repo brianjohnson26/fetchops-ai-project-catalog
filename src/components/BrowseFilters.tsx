@@ -12,6 +12,7 @@ export type Project = {
   team?: string | null;
   owner?: string | null;
   deploymentDate?: string | null;
+  otherNotes?: string | null;
   tools: { tool: { name: string } }[];
 };
 
@@ -68,7 +69,7 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
 
       if (!kw) return true;
       const hay =
-        `${p.title ?? ""} ${p.summary ?? ""} ${p.team ?? ""} ${p.owner ?? ""} ${p.tools
+        `${p.title ?? ""} ${p.summary ?? ""} ${p.team ?? ""} ${p.owner ?? ""} ${p.otherNotes ?? ""} ${p.tools
           .map((t) => t.tool.name)
           .join(" ")}`.toLowerCase();
       return hay.includes(kw);

@@ -25,6 +25,7 @@ async function getProjects(): Promise<BrowseProject[]> {
         howYouBuiltIt: true,
         challengesSolutionsTips: true,
         otherImpacts: true,
+        otherNotes: true,
         tools: {
           select: {
             tool: { select: { name: true } },
@@ -46,6 +47,7 @@ async function getProjects(): Promise<BrowseProject[]> {
       team: r.team ?? null,
       owner: r.owner ?? null,
       deploymentDate: r.deploymentDate?.toISOString() || null,
+      otherNotes: r.otherNotes || null,
       tools: r.tools,
     }));
 

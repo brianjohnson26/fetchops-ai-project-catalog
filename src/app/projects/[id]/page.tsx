@@ -92,6 +92,15 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             </div>
           )}
 
+          {project.otherNotes && (
+            <div>
+              <h2 className="text-lg font-semibold mb-2">Other Notes</h2>
+              <div className="text-gray-700 leading-relaxed" style={{ whiteSpace: "pre-line" }}>
+                {project.otherNotes}
+              </div>
+            </div>
+          )}
+
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h2 className="text-lg font-semibold mb-2">Project Details</h2>
