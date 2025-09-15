@@ -125,6 +125,15 @@ export default function NewProject() {
           <input name="owner" placeholder="Full name" required />
         </label>
 
+        <label>
+          Deployment Date
+          <input
+            type="date"
+            name="deploymentDate"
+            placeholder="When was this project deployed/launched?"
+          />
+        </label>
+
         <label htmlFor="description">Description</label>
         <textarea
           id="description"
@@ -162,15 +171,6 @@ export default function NewProject() {
         <label>
           Hours Saved / Week
           <input type="number" name="hoursSavedPerWeek" min={0} defaultValue={0} />
-        </label>
-
-        <label>
-          Deployment Date
-          <input
-            type="date"
-            name="deploymentDate"
-            placeholder="When was this project deployed/launched?"
-          />
         </label>
 
         <label>
