@@ -152,9 +152,9 @@ export async function POST(req: NextRequest) {
       await notifyNewProject({
         id: String(forSlack.id),
         title: forSlack.title,
+        description: description,
         team: forSlack.team,
         owner: forSlack.owner,
-        // summary: description, // uncomment if your Slack helper expects/uses it
         tools: forSlack.tools,
         links: forSlack.links,
       });
