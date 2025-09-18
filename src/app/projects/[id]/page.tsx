@@ -109,7 +109,12 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                 <div><strong>Owner:</strong> {project.owner}</div>
                 <div><strong>Hours Saved/Week:</strong> {project.hoursSavedPerWeek}</div>
                 {project.deploymentDate && (
-                  <div><strong>Deployment Date:</strong> {new Date(project.deploymentDate).toLocaleDateString()}</div>
+                  <div>
+                    <strong>Deployment Date:</strong>{" "}
+                    {new Date(project.deploymentDate).toLocaleDateString("en-US", {
+                      timeZone: "UTC"
+                    })}
+                  </div>
                 )}
                 <div><strong>Created:</strong> {project.createdAt.toLocaleDateString()}</div>
               </div>
