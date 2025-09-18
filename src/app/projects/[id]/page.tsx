@@ -116,7 +116,9 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                     })}
                   </div>
                 )}
-                <div><strong>Created:</strong> {project.createdAt.toLocaleDateString()}</div>
+                <div><strong>Created:</strong> {project.createdAt.toLocaleDateString("en-US", {
+                  timeZone: "UTC"
+                })}</div>
               </div>
             </div>
 

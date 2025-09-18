@@ -282,7 +282,9 @@ export default function BrowseFilters({ projects, allTeams, allOwners, allTools 
                 {p.owner ? <div style={{ marginBottom: '4px' }}>Owner: {p.owner}</div> : null}
                 {p.deploymentDate ? (
                   <div style={{ marginBottom: '4px' }}>
-                    Deployed: {new Date(p.deploymentDate).toLocaleDateString()}
+                    Deployed: {new Date(p.deploymentDate).toLocaleDateString("en-US", {
+                        timeZone: "UTC"
+                      })}
                   </div>
                 ) : null}
                 {p.tools.length > 0 ? (
