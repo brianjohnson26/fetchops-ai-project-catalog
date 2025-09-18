@@ -2,6 +2,7 @@
 export async function notifyNewProject(project: {
   id: string | number;
   title?: string | null;
+  description?: string | null
   team?: string | null;
   owner?: string | null;
   summary?: string | null;
@@ -30,6 +31,7 @@ export async function notifyNewProject(project: {
   const textLines = [
     `*New AI project submitted!*`,
     `*Title:* ${project.title || "(Untitled)"}`,
+    `*Description:* ${project.description || "—"}`,
     `*Team:* ${project.team || "—"}`,
     `*Owner:* ${project.owner || "—"}`,
     `*Tools:* ${toolList}`,
