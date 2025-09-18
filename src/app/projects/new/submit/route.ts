@@ -141,6 +141,7 @@ export async function POST(req: NextRequest) {
       select: {
         id: true,
         title: true,
+        description: true,
         team: true,
         owner: true,
         tools: { select: { tool: { select: { name: true } } } },
@@ -152,7 +153,7 @@ export async function POST(req: NextRequest) {
       await notifyNewProject({
         id: String(forSlack.id),
         title: forSlack.title,
-        description: description,
+        description: forSlack.description,
         team: forSlack.team,
         owner: forSlack.owner,
         tools: forSlack.tools,
