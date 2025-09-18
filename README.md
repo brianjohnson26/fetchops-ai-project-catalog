@@ -1,8 +1,8 @@
-# Fetch AI Project Catalog (No-GitHub, Replit-first)
+# Fetch AI Project Catalog
 
 An internal catalog for implemented AI projects at Fetch: submit, browse, dashboard metrics, and "find an expert" by tool.
 
-This bundle is optimized for **Replit** (one-click run) and uses **SQLite** via Prisma to avoid external setup. You can later switch to Postgres with the same schema.
+This bundle is optimized for **Replit** (one-click run) and uses **Supabase** via Prisma.
 
 ## Features
 - Dashboard: totals, weekly hours saved, top tools, latest projects
@@ -44,9 +44,6 @@ This bundle is optimized for **Replit** (one-click run) and uses **SQLite** via 
 - **Tool**: name (unique)
 - **Person**/**PersonProject**: reserved for future richer relationships (already used in seed for examples)
 - **Link**: typed URLs to Jira/Drive/Slack/Other
-
-## Switching to Postgres later
-Change `DATABASE_URL` to a Postgres URL and run `pnpm prisma:deploy`. I can provide a migration and import/export scripts on request.
 
 ## Tests
 A lightweight Vitest setup is included (you can expand as needed).
